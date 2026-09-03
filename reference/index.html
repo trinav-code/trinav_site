@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trin — Applied AI Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBFAF7;
+    --ink:#000;
+    --ink-soft:#565049;
+    --ink-faint:#A29C93;
+    --rule:#E4E0D7;
+
+    --d-health:#2F6B5E;
+    --d-compliance:#7A3E52;
+    --d-sport:#3B5486;
+    --d-data:#8A6420;
+
+    --serif:"Newsreader",Georgia,serif;
+    --sans:"Instrument Sans",system-ui,sans-serif;
+  }
+
+  *,*::before,*::after{box-sizing:border-box}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);font-size:16px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit}
+  h1,h2,h3,h4{margin:0}
+
+  .wrap{max-width:680px;margin:0 auto;padding:0 28px}
+
+  /* ---------------- nav ---------------- */
+  .nav{padding:38px 0 0}
+  .nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-size:14.5px}
+  .nav a{
+    text-decoration:none;color:var(--ink-soft);padding-bottom:2px;
+    border-bottom:1px solid transparent;
+    transition:color .18s ease,border-color .18s ease;
+  }
+  .nav a:hover,.nav a:focus-visible{color:var(--ink);border-bottom-color:var(--ink)}
+  .nav a[aria-current]{color:var(--ink)}
+
+  /* ---------------- hero ---------------- */
+  .hero{display:flex;gap:38px;align-items:flex-start;padding:80px 0 70px}
+  .hero-text{flex:1;min-width:0}
+  .hero-text p{
+    font-family:var(--serif);font-weight:300;font-size:25px;line-height:1.5;
+    letter-spacing:-.011em;margin:0 0 22px;max-width:36ch;
+  }
+  .hero-text p.quiet{font-size:20px;color:var(--ink-soft);max-width:46ch}
+  .hero-text p:last-child{margin-bottom:0}
+
+  #portrait{
+    flex:none;width:132px;height:132px;border-radius:3px;display:block;
+    transition:transform .5s cubic-bezier(.22,.61,.36,1);
+    will-change:transform;
+  }
+
+  .load{opacity:0;transform:translateY(9px);animation:rise .75s cubic-bezier(.22,.61,.36,1) forwards}
+  .load:nth-child(1){animation-delay:.05s}
+  .load:nth-child(2){animation-delay:.15s}
+  .load:nth-child(3){animation-delay:.25s}
+  @keyframes rise{to{opacity:1;transform:none}}
+
+  /* ---------------- section frame ---------------- */
+  .block{padding-bottom:68px}
+  .block-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:16px;
+    padding-bottom:13px;border-bottom:1px solid var(--rule);
+  }
+  .block-head h2{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:-.005em}
+  .block-head a{font-size:14px;color:var(--ink-soft);text-decoration:none}
+  .block-head a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+  /* ---------------- roles + education ---------------- */
+  .entries{list-style:none;margin:0;padding:0}
+  .entries li{
+    display:grid;grid-template-columns:1fr auto;column-gap:26px;
+    padding:20px 0;border-bottom:1px solid var(--rule);
+  }
+  .entries li:last-child{border-bottom:0}
+  .entry-title{
+    grid-column:1;font-family:var(--serif);font-weight:400;font-size:19.5px;
+    letter-spacing:-.006em;
+  }
+  .entry-where{grid-column:1;font-size:14.5px;color:var(--ink-soft);margin-top:2px}
+  .entry-note{
+    grid-column:1;font-size:15px;color:var(--ink-soft);line-height:1.55;
+    max-width:48ch;margin:8px 0 0;
+  }
+  .when{
+    grid-column:2;grid-row:1;align-self:baseline;
+    font-size:14px;color:var(--ink-faint);white-space:nowrap;
+    font-variant-numeric:tabular-nums;
+  }
+
+  /* ---------------- projects ---------------- */
+  .projects{list-style:none;margin:0;padding:0}
+  .projects li{border-bottom:1px solid var(--rule)}
+  .projects li:last-child{border-bottom:0}
+  .projects a{
+    display:block;padding:21px 0;text-decoration:none;
+    transition:padding-left .22s cubic-bezier(.22,.61,.36,1);
+  }
+  .projects a:hover,.projects a:focus-visible{padding-left:9px}
+  .projects h3{font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:-.006em}
+  .projects p{margin:6px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:50ch}
+  .tag{display:inline-block;margin-left:11px;font-size:12.5px;font-weight:500;vertical-align:2px}
+  .health{color:var(--d-health)}
+  .compliance{color:var(--d-compliance)}
+  .sport{color:var(--d-sport)}
+  .data{color:var(--d-data)}
+
+  /* ---------------- writing ---------------- */
+  .writing{list-style:none;margin:0;padding:0}
+  .writing li{border-bottom:1px solid var(--rule)}
+  .writing li:last-child{border-bottom:0}
+  .writing a{
+    display:grid;grid-template-columns:1fr auto;column-gap:24px;
+    padding:16px 0;text-decoration:none;align-items:baseline;
+  }
+  .writing a:hover .w-title{text-decoration:underline;text-underline-offset:3px}
+  .w-title{font-family:var(--serif);font-size:18px;font-weight:400}
+  .w-when{font-size:14px;color:var(--ink-faint);white-space:nowrap}
+
+  /* ---------------- currently ---------------- */
+  .now{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;padding-top:20px}
+  .now h4{font-size:14px;font-weight:500;color:var(--ink-faint);margin-bottom:10px}
+  .now p{margin:0;font-size:15.5px}
+  .shelf{list-style:none;margin:10px 0 0;padding:0}
+  .shelf li{font-size:14.5px;color:var(--ink-soft);padding:3px 0}
+  .aside{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:15px;margin-top:9px}
+
+  .globe-line{
+    display:flex;align-items:center;gap:16px;
+    margin-top:32px;padding-top:24px;border-top:1px solid var(--rule);
+  }
+  .globe-dot{
+    width:50px;height:50px;border-radius:50%;flex:none;
+    background:
+      radial-gradient(circle at 34% 30%, #F2EFE8 0 40%, transparent 41%),
+      radial-gradient(circle at 62% 64%, var(--d-sport) 0 4%, transparent 5%),
+      radial-gradient(circle at 42% 47%, var(--d-health) 0 4%, transparent 5%),
+      radial-gradient(circle at 30% 61%, var(--d-data) 0 3.5%, transparent 4.5%),
+      #D9D4C9;
+  }
+  .globe-line p{margin:0;font-size:15px;color:var(--ink-soft);max-width:42ch}
+  .globe-line a{color:var(--ink);text-underline-offset:3px}
+
+  footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-size:14px;color:var(--ink-soft)}
+  footer ul{display:flex;flex-wrap:wrap;gap:22px;list-style:none;margin:0;padding:0}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+  :focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:2px}
+
+  @media (max-width:600px){
+    .hero{flex-direction:column-reverse;align-items:flex-start;gap:26px;padding:54px 0 50px}
+    .hero-text p{font-size:21px;max-width:none}
+    .hero-text p.quiet{font-size:18px}
+    #portrait{width:104px;height:104px}
+    .entries li{grid-template-columns:1fr}
+    .when{grid-column:1;grid-row:auto;margin-top:7px}
+    .now{grid-template-columns:1fr;gap:26px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .load{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="nav">
+    <ul>
+      <li><a href="#" aria-current="page">Trin</a></li>
+      <li><a href="#">Work</a></li>
+      <li><a href="#">Writing</a></li>
+      <li><a href="#">About</a></li>
+    </ul>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-text">
+      <p class="load">I build clinical AI that has to work when there is a real patient on the other end of it.</p>
+      <p class="load quiet">Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.</p>
+      <p class="load quiet">I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.</p>
+    </div>
+    <canvas id="portrait" width="264" height="264" aria-label="Portrait of Trin"></canvas>
+  </header>
+
+  <section class="block">
+    <div class="block-head"><h2>Work</h2><a href="#">Full history</a></div>
+    <ul class="entries">
+      <li>
+        <div class="entry-title">AI/ML Engineer</div>
+        <div class="entry-where">Omi Health</div>
+        <p class="entry-note">Clinical AI infrastructure. Retrieval grounded in real interventions, note generation, evaluation harnesses, and the agent workflows that tie them together.</p>
+        <div class="when">2025 &ndash; now</div>
+      </li>
+      <li>
+        <div class="entry-title">Undergraduate Researcher</div>
+        <div class="entry-where">Na Ji Lab, UC Berkeley</div>
+        <p class="entry-note">Neurophysics. Rebuilt calcium imaging pipelines from MATLAB into Python so the lab could actually iterate on them.</p>
+        <div class="when">2023 &ndash; Dec 2025</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>Where I studied</h2><a href="#">How this happened</a></div>
+    <ul class="entries">
+      <li>
+        <div class="entry-title">M.S. Applied Information Science &amp; M.S. Information Systems</div>
+        <div class="entry-where">Jacobs Technion&ndash;Cornell Institute, Cornell Tech. Health Tech concentration.</div>
+        <div class="when">2026 &ndash; 2027</div>
+      </li>
+      <li>
+        <div class="entry-title">B.A. Data Science &amp; Molecular and Cell Biology</div>
+        <div class="entry-where">UC Berkeley</div>
+        <div class="when">2022 &ndash; 2026</div>
+      </li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>Selected projects</h2><a href="#">All nine</a></div>
+    <ul class="projects">
+      <li>
+        <a href="#">
+          <h3>RegWatch<span class="tag compliance">Compliance</span></h3>
+          <p>Four agents that read a codebase for HIPAA violations. Static analysis handles what is provable, a language model handles what is only arguable, and the split between those two is the whole design.</p>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <h3>AreWeThrough<span class="tag sport">Sports</span></h3>
+          <p>A World Cup qualification tracker that refuses to publish when its two sources disagree. Built test-first, then checked against an independent simulation to see whether I had actually understood the maths.</p>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <h3>Episcope<span class="tag data">Data</span></h3>
+          <p>Outbreak data from WHO and OWID, reconciled into one series, with anomaly detection over the top and a map that does not make you work for it.</p>
+        </a>
+      </li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>Writing</h2><a href="#">Archive</a></div>
+    <ul class="writing">
+      <li><a href="#"><span class="w-title">Why Italy keeps missing the World Cup</span><span class="w-when">Draft</span></a></li>
+      <li><a href="#"><span class="w-title">Building a globe, and stealing the idea honestly</span><span class="w-when">Draft</span></a></li>
+      <li><a href="#"><span class="w-title">What a wet lab taught me about trusting a model</span><span class="w-when">Draft</span></a></li>
+    </ul>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>Currently</h2></div>
+    <div class="now">
+      <div>
+        <h4>Reading</h4>
+        <p>The Idiot &mdash; Elif Batuman</p>
+        <ul class="shelf">
+          <li>Last month: Piranesi</li>
+          <li>Last month: The Master and Margarita</li>
+        </ul>
+        <p class="aside">Pulled from my notes, so it stays honest about the ones I abandoned.</p>
+      </div>
+      <div>
+        <h4>Listening</h4>
+        <p>Live from Spotify</p>
+        <p class="aside">Fifteen years of tabla means I notice the percussion first, every time.</p>
+      </div>
+    </div>
+
+    <div class="globe-line">
+      <div class="globe-dot" aria-hidden="true"></div>
+      <p>Everywhere I have been so far, on one slowly turning ball. <a href="#">Open the globe</a></p>
+    </div>
+  </section>
+
+  <footer>
+    <ul>
+      <li><a href="#">Email</a></li>
+      <li><a href="#">GitHub</a></li>
+      <li><a href="#">LinkedIn</a></li>
+      <li><a href="#">Medium</a></li>
+      <li><a href="#">Colophon</a></li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+/* Bayer-dithered portrait.
+   Drop a square photo at portrait.jpg next to this file and it is used automatically.
+   Until then a procedural stand-in renders so the layout stays honest. */
+(function () {
+  var cv = document.getElementById('portrait');
+  if (!cv) return;
+  var ctx = cv.getContext('2d', { willReadFrequently: true });
+  var W = cv.width, H = cv.height;
+
+  var BAYER = [
+    [ 0, 8, 2,10],
+    [12, 4,14, 6],
+    [ 3,11, 1, 9],
+    [15, 7,13, 5]
+  ];
+  var INK   = [17, 17, 17];
+  var PAPER = [251, 250, 247];
+  var source = null;
+
+  function drawStandIn() {
+    ctx.fillStyle = '#fff';
+    ctx.fillRect(0, 0, W, H);
+    var g = ctx.createRadialGradient(W * 0.40, H * 0.34, 8, W * 0.5, H * 0.5, W * 0.72);
+    g.addColorStop(0, '#f4f4f4');
+    g.addColorStop(1, '#4a4a4a');
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(0,0,0,0.32)';
+    ctx.beginPath();
+    ctx.ellipse(W * 0.5, H * 0.95, W * 0.36, H * 0.30, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(W * 0.5, H * 0.44, W * 0.21, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function dither(bias) {
+    if (source) {
+      ctx.clearRect(0, 0, W, H);
+      ctx.drawImage(source, 0, 0, W, H);
+    } else {
+      drawStandIn();
+    }
+    var img = ctx.getImageData(0, 0, W, H);
+    var d = img.data;
+    for (var y = 0; y < H; y++) {
+      for (var x = 0; x < W; x++) {
+        var i = (y * W + x) * 4;
+        var lum = (d[i] * 0.299 + d[i + 1] * 0.587 + d[i + 2] * 0.114) / 255;
+        var t = (BAYER[y & 3][x & 3] + 0.5) / 16;
+        var c = (lum + bias > t) ? PAPER : INK;
+        d[i] = c[0]; d[i + 1] = c[1]; d[i + 2] = c[2]; d[i + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+
+  var bias = 0, target = 0, raf = null;
+
+  function tick() {
+    bias += (target - bias) * 0.09;
+    dither(bias);
+    if (Math.abs(target - bias) > 0.0015) {
+      raf = requestAnimationFrame(tick);
+    } else {
+      bias = target;
+      dither(bias);
+      raf = null;
+    }
+  }
+
+  dither(0);
+
+  var img = new Image();
+  img.onload = function () { source = img; dither(bias); };
+  img.src = 'portrait.jpg';
+
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.addEventListener('mousemove', function (e) {
+      var r = cv.getBoundingClientRect();
+      var cx = r.left + r.width / 2;
+      var cy = r.top + r.height / 2;
+      var dx = (e.clientX - cx) / window.innerWidth;
+      var dy = (e.clientY - cy) / window.innerHeight;
+
+      /* leans toward you, barely */
+      cv.style.transform = 'translate(' + (dx * 7).toFixed(2) + 'px,' + (dy * 5).toFixed(2) + 'px)';
+
+      /* and loosens as you get close */
+      var dist = Math.min(1, Math.hypot(e.clientX - cx, e.clientY - cy) / 460);
+      target = (1 - dist) * 0.085;
+      if (!raf) raf = requestAnimationFrame(tick);
+    }, { passive: true });
+  }
+})();
+</script>
+</body>
+</html>
