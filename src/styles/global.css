@@ -52,6 +52,7 @@ h1,h2,h3,h4{margin:0}
   transition:transform .5s cubic-bezier(.22,.61,.36,1);
   will-change:transform;
 }
+.drum{flex:none;display:block;cursor:crosshair;touch-action:manipulation;margin-top:6px}
 
 .load{opacity:0;transform:translateY(9px);animation:rise .75s cubic-bezier(.22,.61,.36,1) forwards}
 .load:nth-child(1){animation-delay:.05s}
@@ -184,6 +185,7 @@ footer button:hover{color:var(--ink);text-decoration:underline;text-underline-of
   .hero-text p{font-size:21px;max-width:none}
   .hero-text p.quiet{font-size:18px}
   #portrait{width:104px;height:104px}
+  .drum{width:160px!important;height:160px!important}
   .page-head{padding:54px 0 34px}
   .page-head h1{font-size:21px}
   .page-head p{font-size:18px}

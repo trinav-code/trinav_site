@@ -5,7 +5,7 @@ import BlockHead from '../components/BlockHead.astro';
 import Entries from '../components/Entries.astro';
 import ProjectList from '../components/ProjectList.astro';
 import WritingList from '../components/WritingList.astro';
-import Portrait from '../components/Portrait.astro';
+import Drum from '../components/Drum.astro';
 import { countWord, finishedLabel } from '../lib/format';
 
 const rolesEntry = await getEntry('history', 'roles');
@@ -30,7 +30,7 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
       <p class="load quiet">Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.</p>
       <p class="load quiet">I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.</p>
     </div>
-    <Portrait />
+    <Drum size={200} />
   </header>
 
   <section class="block">
