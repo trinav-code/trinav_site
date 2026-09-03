@@ -16,17 +16,24 @@ roles:
       generation, evaluation harnesses, and the agent workflows that tie them
       together.
 
-  - title: TODO
-    org: Blackprint AI
-    start: TODO
-    end: TODO
-    note: TODO — pull from resume variants, confirm before publishing
+  - title: Data Science Intern
+    org: Magna Education
+    start: 2025-06
+    end: 2025-08
+    note: >
+      Cheating detection over quiz answers: embeddings and similarity
+      clustering against a labeled benchmark of model-written and
+      human-written answers, plus the adopt-or-not evaluation of two
+      commercial detectors.
 
-  - title: TODO
-    org: Manga
-    start: TODO
-    end: TODO
-    note: TODO — pull from resume variants, confirm before publishing
+  - title: Data Science Intern
+    org: Blackprint AI
+    start: 2024-08
+    end: 2025-01
+    note: >
+      Async crawler over three listing sites and four Mexican cities,
+      reconciling 400K+ property listings into one schema, with incremental
+      S3 loads and Redshift cleaning downstream.
 
   - title: Undergraduate Researcher
     org: Na Ji Lab, UC Berkeley
