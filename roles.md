@@ -9,7 +9,7 @@
 roles:
   - title: AI/ML Engineer
     org: Omi Health
-    start: 2025
+    start: 2026-02
     current: true
     note: >
       Clinical AI infrastructure. Retrieval grounded in real interventions, note
@@ -35,9 +35,9 @@ roles:
       reconciling 400K+ property listings into one schema, with incremental
       S3 loads and Redshift cleaning downstream.
 
-  - title: Undergraduate Researcher
-    org: Na Ji Lab, UC Berkeley
-    start: 2023
+  - title: Research Assistant
+    org: Ji Lab, UC Berkeley Physics
+    start: 2023-07
     end: 2025-12
     note: >
       Neurophysics. Rebuilt calcium imaging pipelines from MATLAB into Python so
@@ -47,8 +47,8 @@ education:
   - degree: M.S. Applied Information Science & M.S. Information Systems
     school: Jacobs Technion–Cornell Institute, Cornell Tech
     detail: Health Tech concentration
-    start: 2026
-    end: 2027
+    start: 2026-08
+    end: 2028-05
 
   - degree: B.A. Data Science & Molecular and Cell Biology
     school: UC Berkeley
