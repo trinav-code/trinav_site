@@ -1,0 +1,16 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { domains } from '../../site.config';
+interface Props { projects: CollectionEntry<'projects'>[] }
+const { projects } = Astro.props;
+---
+<ul class="projects">
+  {projects.map((p) => (
+    <li>
+      <a href={`/work/${p.id}`}>
+        <h3>{p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span></h3>
+        <p>{p.data.summary}</p>
+      </a>
+    </li>
+  ))}
+</ul>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import WritingList from '../../components/WritingList.astro';
+const posts = (await getCollection('writing')).sort(
+  (a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0),
+);
+---
+<Base title="Writing" description="Essays and notes.">
+  <header class="page-head">
+    <h1>Writing.</h1>
+  </header>
+  <section class="block">
+    <WritingList posts={posts} />
+  </section>
+</Base>

@@ -1,0 +1,83 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import BlockHead from '../components/BlockHead.astro';
+import Entries from '../components/Entries.astro';
+import ProjectList from '../components/ProjectList.astro';
+import WritingList from '../components/WritingList.astro';
+import Portrait from '../components/Portrait.astro';
+import { countWord, finishedLabel } from '../lib/format';
+
+const rolesEntry = await getEntry('history', 'roles');
+const eduEntry = await getEntry('history', 'education');
+const roles = (rolesEntry?.data.items ?? []).filter((r): r is Extract<typeof r, { title: string }> => 'title' in r);
+const education = (eduEntry?.data.items ?? []).filter((e): e is Extract<typeof e, { degree: string }> => 'degree' in e);
+
+const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const featured = allProjects.filter((p) => p.data.featured).sort((a, b) => a.data.featured! - b.data.featured!);
+
+const posts = (await getCollection('writing')).sort(
+  (a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0),
+);
+
+const current = (await getEntry('books', 'current'))?.data.items ?? [];
+const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 2);
+---
+<Base>
+  <header class="hero">
+    <div class="hero-text">
+      <p class="load">I build clinical AI that has to work when there is a real patient on the other end of it.</p>
+      <p class="load quiet">Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.</p>
+      <p class="load quiet">I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.</p>
+    </div>
+    <Portrait />
+  </header>
+
+  <section class="block">
+    <BlockHead title="Work" href="/about#work" link={`All ${countWord(roles.length)} roles`} />
+    <Entries items={roles.slice(0, 2).map((r) => ({
+      title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
+    }))} />
+  </section>
+
+  <section class="block">
+    <BlockHead title="Where I studied" href="/about" link="How this happened" />
+    <Entries items={education.map((e) => ({
+      title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, start: e.start, end: e.end,
+    }))} />
+  </section>
+
+  <section class="block">
+    <BlockHead title="Selected projects" href="/work" link={`All ${countWord(allProjects.length)}`} />
+    <ProjectList projects={featured} />
+  </section>
+
+  <section class="block">
+    <BlockHead title="Writing" href="/writing" link="Archive" />
+    <WritingList posts={posts.slice(0, 3)} />
+  </section>
+
+  <section class="block">
+    <BlockHead title="Currently" />
+    <div class="now">
+      <div>
+        <h4>Reading</h4>
+        {current[0] && <p>{current[0].title} &mdash; {current[0].author}</p>}
+        <ul class="shelf">
+          {recent.map((b) => <li>{finishedLabel(b.finished)}: {b.title}</li>)}
+        </ul>
+        <p class="aside">Pulled from my notes, so it stays honest about the ones I abandoned.</p>
+      </div>
+      <div>
+        <h4>Listening</h4>
+        <p>Live from Spotify</p>
+        <p class="aside">Eighteen years of tabla means I notice the percussion first, every time.</p>
+      </div>
+    </div>
+
+    <div class="globe-line">
+      <div class="globe-dot" aria-hidden="true"></div>
+      <p>Everywhere I have been so far, on one slowly turning ball. <a href="/globe">Open the globe</a></p>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectList from '../../components/ProjectList.astro';
+import { domains, type Domain } from '../../../site.config';
+
+const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const tag = Astro.url.searchParams.get('domain') as Domain | null;
+const keys = Object.keys(domains) as Domain[];
+---
+<Base title="Work" description="Every project, filterable by domain.">
+  <header class="page-head">
+    <h1>Everything I have shipped or nearly shipped, by domain.</h1>
+  </header>
+  <section class="block">
+    <ul class="filters" aria-label="Filter by domain">
+      <li><a href="/work" aria-current="page">All</a></li>
+      {keys.map((k) => (
+        <li><a href={`/work?domain=${k}`} class={k}>{domains[k].label}</a></li>
+      ))}
+    </ul>
+    <ProjectList projects={all} />
+  </section>
+  <script is:inline>
+    /* Static filter: hide non-matching rows when ?domain= is set. Zero JS otherwise. */
+    (function () {
+      var d = new URLSearchParams(location.search).get('domain');
+      if (!d) return;
+      document.querySelectorAll('.filters a').forEach(function (a) {
+        if (a.getAttribute('href').endsWith('=' + d)) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+      document.querySelectorAll('.projects li').forEach(function (li) {
+        if (!li.querySelector('.tag.' + d)) li.hidden = true;
+      });
+    })();
+  </script>
+</Base>

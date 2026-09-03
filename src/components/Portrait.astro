@@ -1,0 +1,57 @@
+---
+/* Placeholder for the drum piece (later pass). Bayer-dithered portrait from
+   the reference mockup; drops in /portrait.jpg if present. */
+---
+<canvas id="portrait" width="264" height="264" aria-label="Portrait"></canvas>
+<script is:inline>
+(function () {
+  var cv = document.getElementById('portrait');
+  if (!cv) return;
+  var ctx = cv.getContext('2d', { willReadFrequently: true });
+  var W = cv.width, H = cv.height;
+  var BAYER = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+  var INK = [17,17,17], PAPER = [251,250,247];
+  var source = null;
+  function drawStandIn() {
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
+    var g = ctx.createRadialGradient(W*0.40,H*0.34,8,W*0.5,H*0.5,W*0.72);
+    g.addColorStop(0,'#f4f4f4'); g.addColorStop(1,'#4a4a4a');
+    ctx.fillStyle = g; ctx.fillRect(0,0,W,H);
+    ctx.fillStyle = 'rgba(0,0,0,0.32)';
+    ctx.beginPath(); ctx.ellipse(W*0.5,H*0.95,W*0.36,H*0.30,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(W*0.5,H*0.44,W*0.21,0,Math.PI*2); ctx.fill();
+  }
+  function dither(bias) {
+    if (source) { ctx.clearRect(0,0,W,H); ctx.drawImage(source,0,0,W,H); } else { drawStandIn(); }
+    var img = ctx.getImageData(0,0,W,H), d = img.data;
+    for (var y=0;y<H;y++) for (var x=0;x<W;x++) {
+      var i=(y*W+x)*4;
+      var lum=(d[i]*0.299+d[i+1]*0.587+d[i+2]*0.114)/255;
+      var t=(BAYER[y&3][x&3]+0.5)/16;
+      var c=(lum+bias>t)?PAPER:INK;
+      d[i]=c[0]; d[i+1]=c[1]; d[i+2]=c[2]; d[i+3]=255;
+    }
+    ctx.putImageData(img,0,0);
+  }
+  var bias=0, target=0, raf=null;
+  function tick() {
+    bias += (target-bias)*0.09; dither(bias);
+    if (Math.abs(target-bias)>0.0015) raf=requestAnimationFrame(tick);
+    else { bias=target; dither(bias); raf=null; }
+  }
+  dither(0);
+  var img = new Image();
+  img.onload = function(){ source=img; dither(bias); };
+  img.src = '/portrait.jpg';
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    window.addEventListener('mousemove', function(e){
+      var r=cv.getBoundingClientRect(), cx=r.left+r.width/2, cy=r.top+r.height/2;
+      var dx=(e.clientX-cx)/window.innerWidth, dy=(e.clientY-cy)/window.innerHeight;
+      cv.style.transform='translate('+(dx*7).toFixed(2)+'px,'+(dy*5).toFixed(2)+'px)';
+      var dist=Math.min(1,Math.hypot(e.clientX-cx,e.clientY-cy)/460);
+      target=(1-dist)*0.085;
+      if(!raf) raf=requestAnimationFrame(tick);
+    }, {passive:true});
+  }
+})();
+</script>

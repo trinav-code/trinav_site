@@ -1,0 +1,17 @@
+---
+import type { CollectionEntry } from 'astro:content';
+interface Props { posts: CollectionEntry<'writing'>[] }
+const { posts } = Astro.props;
+const fmt = (d?: Date) =>
+  d ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Draft';
+---
+<ul class="writing">
+  {posts.map((p) => (
+    <li>
+      <a href={`/writing/${p.id}`}>
+        <span class="w-title">{p.data.title}</span>
+        <span class="w-when">{p.data.draft ? 'Draft' : fmt(p.data.date)}</span>
+      </a>
+    </li>
+  ))}
+</ul>

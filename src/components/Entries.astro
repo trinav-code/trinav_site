@@ -1,0 +1,19 @@
+---
+import { range } from '../lib/format';
+interface Item {
+  title: string; where: string; note?: string;
+  start: string; end?: string; current?: boolean;
+}
+interface Props { items: Item[] }
+const { items } = Astro.props;
+---
+<ul class="entries">
+  {items.map((e) => (
+    <li>
+      <div class="entry-title">{e.title}</div>
+      <div class="entry-where">{e.where}</div>
+      {e.note && <p class="entry-note">{e.note}</p>}
+      <div class="when">{range(e.start, e.end, e.current)}</div>
+    </li>
+  ))}
+</ul>

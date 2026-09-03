@@ -1,0 +1,19 @@
+---
+import { site } from '../../site.config';
+const path = Astro.url.pathname;
+const items = [
+  { href: '/', label: site.shortName },
+  { href: '/work', label: 'Work' },
+  { href: '/writing', label: 'Writing' },
+  { href: '/about', label: 'About' },
+];
+const isCurrent = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+---
+<nav class="nav" aria-label="Primary">
+  <ul>
+    {items.map((i) => (
+      <li><a href={i.href} aria-current={isCurrent(i.href) ? 'page' : undefined}>{i.label}</a></li>
+    ))}
+  </ul>
+</nav>

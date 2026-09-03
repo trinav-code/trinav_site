@@ -1,0 +1,27 @@
+---
+import { site } from '../../site.config';
+const { address, obfuscate } = site.email;
+const [user, host] = address.split('@');
+---
+<footer>
+  <ul>
+    <li>
+      {obfuscate
+        ? <button type="button" data-u={user} data-h={host}>Email</button>
+        : <a href={`mailto:${address}`}>Email</a>}
+    </li>
+    <li><a href={site.links.github} rel="me">GitHub</a></li>
+    <li><a href={site.links.linkedin} rel="me">LinkedIn</a></li>
+    <li><a href={site.links.medium} rel="me">Medium</a></li>
+    <li><a href="/colophon">Colophon</a></li>
+  </ul>
+</footer>
+{obfuscate && (
+  <script is:inline>
+    /* Email lives behind one click so it is not in the markup as plain text. */
+    document.querySelector('footer button[data-u]')?.addEventListener('click', function () {
+      var a = this.dataset.u + '@' + this.dataset.h;
+      window.location.href = 'mailto:' + a;
+    });
+  </script>
+)}

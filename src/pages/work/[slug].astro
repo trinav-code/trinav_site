@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { domains } from '../../../site.config';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await render(p);
+const host = (u: string) => new URL(u).host;
+---
+<Base title={p.data.title} description={p.data.summary}>
+  <header class="page-head">
+    <h1>{p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span></h1>
+    <p>{p.data.summary}</p>
+  </header>
+  <div class="meta">
+    {p.data.live && <a href={p.data.live}>Live at {host(p.data.live)}</a>}
+    {p.data.repo && <a href={p.data.repo}>Source on GitHub</a>}
+  </div>
+  <article class="prose"><Content /></article>
+</Base>
