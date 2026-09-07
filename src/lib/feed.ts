@@ -8,9 +8,9 @@ export interface FeedItem {
   external: boolean;
 }
 
-/** Local MDX posts and Medium posts, newest first. Drafts float to the top. */
+/** Local MDX posts and Medium posts, newest first. Drafts show in dev only. */
 export async function writingFeed(): Promise<FeedItem[]> {
-  const local = (await getCollection('writing')).map((p) => ({
+  const local = (await getCollection('writing', (p) => import.meta.env.DEV || !p.data.draft)).map((p) => ({
     title: p.data.title,
     href: `/writing/${p.id}`,
     date: p.data.date,

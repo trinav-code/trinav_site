@@ -1,14 +1,32 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { writingFeed } from '../../lib/feed';
 import WritingList from '../../components/WritingList.astro';
+import { writingFeed } from '../../lib/feed';
+import { site } from '../../../site.config';
+
 const posts = await writingFeed();
+const byYear = new Map<string, typeof posts>();
+for (const p of posts) {
+  const y = p.date ? String(p.date.getFullYear()) : 'Drafts';
+  byYear.set(y, [...(byYear.get(y) ?? []), p]);
+}
+const external = posts.filter((p) => p.external).length;
 ---
-<Base title="Writing" description="Essays and notes.">
+<Base title="Writing" description="Essays and notes, mostly about building things that have to be right.">
   <header class="page-head">
-    <h1>Writing.</h1>
+    <h1>I write when a project leaves a question I could not answer while building it.</h1>
+    <p>Mostly the maths behind something that looked simple, or the part of a system that turned out to be the whole system. Long form lives on Medium for now; the shorter notes will live here.</p>
   </header>
-  <section class="block">
-    <WritingList posts={posts} />
-  </section>
+
+  {[...byYear.entries()].map(([year, items]) => (
+    <section class="block year">
+      <div class="year-label" aria-hidden="true">{year}</div>
+      <WritingList posts={items} />
+    </section>
+  ))}
+
+  <p class="elsewhere">
+    {external > 0 && <>Everything marked ↗ opens on <a href={site.links.medium} rel="me external">Medium</a>, where {external === 1 ? 'one piece is' : `${external} pieces are`} published so far.</>}
+    {external === 0 && <>Medium was unreachable at build time, so only local notes are listed.</>}
+  </p>
 </Base>
