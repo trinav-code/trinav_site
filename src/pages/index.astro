@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import BlockHead from '../components/BlockHead.astro';
 import Entries from '../components/Entries.astro';
 import ProjectList from '../components/ProjectList.astro';
+import { writingFeed } from '../lib/feed';
 import WritingList from '../components/WritingList.astro';
 import Drum from '../components/Drum.astro';
 import { countWord, finishedLabel } from '../lib/format';
@@ -16,9 +17,7 @@ const education = (eduEntry?.data.items ?? []).filter((e): e is Extract<typeof e
 const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
 const featured = allProjects.filter((p) => p.data.featured).sort((a, b) => a.data.featured! - b.data.featured!);
 
-const posts = (await getCollection('writing')).sort(
-  (a, b) => (b.data.date?.getTime() ?? 0) - (a.data.date?.getTime() ?? 0),
-);
+const posts = await writingFeed();
 
 const current = (await getEntry('books', 'current'))?.data.items ?? [];
 const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 2);

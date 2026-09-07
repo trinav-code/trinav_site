@@ -1,7 +1,8 @@
 import { defineCollection, z } from 'astro:content';
 import { glob, file } from 'astro/loaders';
 import YAML from 'yaml';
-import { domains } from '../site.config';
+import { domains, site } from '../site.config';
+import { mediumLoader } from './lib/medium-loader';
 
 /** roles.md and books.md are YAML wrapped in `---` fences so they read as
  *  Obsidian frontmatter. Strip the fences and parse the body. */
@@ -91,4 +92,13 @@ const writing = defineCollection({
   }),
 });
 
-export const collections = { history, books, projects, writing };
+const medium = defineCollection({
+  loader: mediumLoader(site.feeds.medium),
+  schema: z.object({
+    title: z.string(),
+    url: z.string().url(),
+    date: z.coerce.date(),
+  }),
+});
+
+export const collections = { history, books, projects, writing, medium };

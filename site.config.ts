@@ -33,6 +33,11 @@ export const site = {
     medium: "https://medium.com/@trinav.chaudhuri",
   },
 
+  /** Fetched at build time and merged into /writing. Titles and dates only. */
+  feeds: {
+    medium: "https://medium.com/feed/@trinav.chaudhuri",
+  },
+
   /** /resume redirects here. Update the target, never the path. */
   resume: "/files/trinav-chaudhuri.pdf",
 
