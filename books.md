@@ -1,39 +1,39 @@
 ---
-# This file is the shelf. It is written to look exactly like what an Obsidian
-# note will emit, so the build parser works the same before and after the
-# vault sync is wired up.
+# The shelf. Order in this file is shelf order (left to right): current
+# books first, then recent, newest finished on the left. Edit here or run
+# `npm run dev` and open /edit-books for a drag-and-drop editor that writes
+# this file back.
 #
 # Per book:
 #   title, author   required
-#   finished        YYYY-MM, recent shelf only
-#   format          paperback | hardcover | ebook   (sets spine height band; default paperback)
+#   finished        YYYY-MM, or just YYYY when the month is fuzzy
+#   format          paperback | hardcover | ebook   (spine height band; default paperback)
 #   pages           spine thickness; if absent the build takes Open Library's median
 #   isbn            optional, makes the cover lookup exact
 #   cover           optional URL override; otherwise the build asks Open Library
-#   blurb           optional; otherwise the build takes Open Library's description
-#   thoughts        optional, renders only when present
+#   thoughts        optional, renders in the panel only when present
+#   tags            optional list, e.g. [football]
 #
-# Cover colour for the shelf band is sampled from the cover at build time,
-# never here.
+# Cover colour for the spine band is sampled from the cover at build time.
+# Goodreads: set feeds.goodreads in site.config.ts and any book on the
+# "read" shelf that is not listed here is appended at build.
 
 current:
   - title: Answered Prayers
     author: Truman Capote
     format: paperback
 
+  - title: A Brief History of Intelligence
+    author: Max Bennett
+    format: hardcover
 recent:
   - title: Kokoro
     author: Natsume Sōseki
-    finished: 2026-08
+    finished: 2026-07
     format: paperback
 
-  - title: Paradise of the Blind
-    author: Dương Thu Hương
-    finished: 2026-08
-    format: paperback
-
-  - title: Life for Sale
-    author: Yukio Mishima
+  - title: A History of Fear
+    author: Luke Dumas
     finished: 2026-07
     format: paperback
 
@@ -41,4 +41,76 @@ recent:
     author: Carlos Fonseca
     finished: 2026-07
     format: hardcover
+
+  - title: Paradise of the Blind
+    author: Dương Thu Hương
+    finished: 2026-06
+    format: paperback
+
+  - title: The Only One Left
+    author: Riley Sager
+    finished: 2026-06
+    format: paperback
+
+  - title: The Secret of Secrets
+    author: Dan Brown
+    finished: 2026-05
+    format: hardcover
+
+  - title: Convenience Store Woman
+    author: Sayaka Murata
+    finished: 2026-03
+    format: paperback
+
+  - title: Small Things Like These
+    author: Claire Keegan
+    finished: 2026-02
+    format: paperback
+
+  - title: Life for Sale
+    author: Yukio Mishima
+    finished: 2026-01
+    format: paperback
+
+  - title: Expected Goals
+    author: Rory Smith
+    finished: 2025
+    format: hardcover
+    tags:
+      - football
+
+  - title: The Mixer
+    author: Michael Cox
+    finished: 2025
+    format: paperback
+    tags:
+      - football
+
+  - title: Inverting the Pyramid
+    author: Jonathan Wilson
+    finished: 2025
+    format: paperback
+    tags:
+      - football
+
+  - title: Net Gains
+    author: Ryan O'Hanlon
+    finished: 2025
+    format: hardcover
+    tags:
+      - football
+
+  - title: Soccernomics
+    author: Simon Kuper
+    finished: 2025
+    format: paperback
+    tags:
+      - football
+
+  - title: The Numbers Game
+    author: Chris Anderson
+    finished: 2025
+    format: paperback
+    tags:
+      - football
 ---

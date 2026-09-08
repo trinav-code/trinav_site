@@ -55,6 +55,8 @@ const bookItem = z.object({
   isbn: z.string().optional(),
   blurb: z.string().optional(),
   thoughts: z.string().optional(),
+  tags: z.array(z.string()).optional(),
+  source: z.enum(['file', 'goodreads']).default('file'),
   coverUrl: z.string().optional(),
   coverLarge: z.string().optional(),
   /** Dominant cover colour, sampled at build. Absent when there is no cover. */

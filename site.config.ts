@@ -36,6 +36,12 @@ export const site = {
   /** Fetched at build time and merged into /writing. Titles and dates only. */
   feeds: {
     medium: "https://medium.com/feed/@trinav.chaudhuri",
+    /**
+     * Goodreads "read" shelf RSS. Profile > the RSS icon at the bottom of
+     * your shelf page, or https://www.goodreads.com/review/list_rss/<user-id>?shelf=read
+     * Empty string skips the import.
+     */
+    goodreads: "",
   },
 
   /** /resume redirects here. Update the target, never the path. */

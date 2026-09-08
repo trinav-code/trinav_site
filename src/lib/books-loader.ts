@@ -2,6 +2,8 @@ import type { Loader } from 'astro/loaders';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import YAML from 'yaml';
 import { decode } from 'jpeg-js';
+import { XMLParser } from 'fast-xml-parser';
+import { site } from '../../site.config';
 
 /**
  * Reads books.md and enriches every book at build time from Open Library:
@@ -14,7 +16,8 @@ import { decode } from 'jpeg-js';
 export interface RawBook {
   title: string; author: string; finished?: string | number;
   format?: 'paperback' | 'hardcover' | 'ebook'; pages?: number;
-  isbn?: string; cover?: string; blurb?: string; thoughts?: string;
+  isbn?: string; cover?: string; blurb?: string; thoughts?: string; tags?: string[];
+  source?: 'file' | 'goodreads';
 }
 export interface Book extends RawBook {
   finished?: string;
@@ -23,6 +26,7 @@ export interface Book extends RawBook {
 }
 
 const CACHE = '.cache/books.json';
+const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 const UA = { 'user-agent': 'personal-site build (github.com/trinav-code/trinav_site)' };
 
 function stripFences(content: string) {
@@ -86,20 +90,25 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
     finished: raw.finished === undefined ? undefined : String(raw.finished),
     format: raw.format ?? 'paperback',
   };
-  if (cache[key]) return { ...base, ...cache[key], ...stripUndefined(raw) };
+  const overrides = { ...stripUndefined(raw), finished: base.finished };
+  if (cache[key]) return { ...base, ...cache[key], ...overrides };
 
   const found: Partial<Book> = {};
   try {
     const q = raw.isbn
       ? `q=isbn:${encodeURIComponent(raw.isbn)}`
       : `title=${encodeURIComponent(raw.title)}&author=${encodeURIComponent(raw.author)}`;
-    const FIELDS = 'limit=1&fields=key,cover_i,number_of_pages_median';
+    const FIELDS = 'limit=6&fields=key,cover_i,number_of_pages_median,author_name';
     let search = await fetchJson(`https://openlibrary.org/search.json?${q}&${FIELDS}`);
     if (!search?.docs?.length && !raw.isbn) {
       /* Author names with diacritics often miss; fall back to the title alone. */
       search = await fetchJson(`https://openlibrary.org/search.json?title=${encodeURIComponent(raw.title)}&${FIELDS}`);
     }
-    const doc = search?.docs?.[0];
+    const docs: any[] = search?.docs ?? [];
+    /* Prefer a result with a cover, but only if its author matches ours. */
+    const surname = norm(raw.author).split(' ').pop() ?? '';
+    const byAuthor = (d: any) => (d.author_name ?? []).some((a: string) => norm(a).includes(surname));
+    const doc = docs.find((d) => d.cover_i && byAuthor(d)) ?? docs.find(byAuthor) ?? docs[0];
     if (doc) {
       if (doc.number_of_pages_median && !raw.pages) found.pages = doc.number_of_pages_median;
       if (doc.cover_i && !raw.cover) {
@@ -141,12 +150,40 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
   } catch (e) {
     log(`lookup failed for ${raw.title}: ${(e as Error).message}`);
   }
-  return { ...base, ...found, ...stripUndefined(raw) };
+  return { ...base, ...found, ...overrides };
 }
 
 function stripUndefined<T extends object>(o: T): Partial<T> {
   return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined)) as Partial<T>;
 }
+
+/** Books on the Goodreads "read" shelf, newest first. Fail-soft. */
+async function goodreadsBooks(feedUrl: string, log: (m: string) => void): Promise<RawBook[]> {
+  if (!feedUrl) return [];
+  try {
+    const res = await fetch(feedUrl, { signal: AbortSignal.timeout(15000), headers: UA });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const parsed = new XMLParser({ ignoreAttributes: false, cdataPropName: '__cdata' }).parse(await res.text());
+    const raw = parsed?.rss?.channel?.item ?? [];
+    const items: any[] = Array.isArray(raw) ? raw : [raw];
+    const text = (v: unknown): string =>
+      typeof v === 'string' ? v : v && typeof v === 'object' && '__cdata' in (v as any) ? String((v as any).__cdata) : String(v ?? '');
+    return items.map((it) => {
+      const read = text(it.user_read_at);
+      const d = read ? new Date(read) : undefined;
+      const finished = d && !isNaN(d.getTime()) ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` : undefined;
+      const pages = Number(text(it.num_pages)) || undefined;
+      const isbn = text(it.isbn) || undefined;
+      const cover = text(it.book_large_image_url) || undefined;
+      const thoughts = text(it.user_review).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || undefined;
+      return { title: text(it.title).trim(), author: text(it.author_name).trim(), finished, pages, isbn, cover, thoughts, source: 'goodreads' as const };
+    }).filter((b) => b.title);
+  } catch (e) {
+    log(`Goodreads feed skipped (${(e as Error).message}).`);
+    return [];
+  }
+}
+
 
 export function booksLoader(path = 'books.md'): Loader {
   return {
@@ -165,6 +202,13 @@ export function booksLoader(path = 'books.md'): Loader {
       for (const b of data.current ?? []) current.push(await enrich(b, cache, log));
       const recent: Book[] = [];
       for (const b of data.recent ?? []) recent.push(await enrich(b, cache, log));
+
+      /* Goodreads: append anything on the read shelf that books.md does not
+         already list (matched on title). The file always wins. */
+      const listed = new Set([...current, ...recent].map((b) => norm(b.title)));
+      const fromGoodreads = (await goodreadsBooks(site.feeds.goodreads, log)).filter((b) => !listed.has(norm(b.title)));
+      for (const b of fromGoodreads) recent.push(await enrich(b, cache, log));
+      if (fromGoodreads.length) logger.info(`${fromGoodreads.length} books added from Goodreads.`);
 
       try { await mkdir('.cache', { recursive: true }); await writeFile(CACHE, JSON.stringify(cache, null, 2)); } catch {}
 

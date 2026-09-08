@@ -1,0 +1,99 @@
+---
+/* Dev-only shelf editor. Drag rows to reorder or move between shelves,
+   edit fields inline, add or remove books, Save writes books.md. */
+import Base from '../layouts/Base.astro';
+---
+<Base title="Edit books">
+  <header class="page-head">
+    <h1>Shelf editor.</h1>
+    <p>Drag to reorder or move between shelves. Save writes <code>books.md</code>; the site reloads by itself. Dev only.</p>
+  </header>
+  <section class="block">
+    <div class="ed-bar"><button id="save" class="ed-btn">Save</button><span id="status"></span></div>
+    <h2 class="ed-h">Current</h2>
+    <ol class="ed-list" data-shelf="current"></ol>
+    <button class="ed-add" data-add="current">+ add to current</button>
+    <h2 class="ed-h">Recent (newest first)</h2>
+    <ol class="ed-list" data-shelf="recent"></ol>
+    <button class="ed-add" data-add="recent">+ add to recent</button>
+  </section>
+  <template id="row">
+    <li class="ed-row" draggable="true">
+      <span class="ed-grip" title="drag">⋮⋮</span>
+      <input name="title" placeholder="Title" />
+      <input name="author" placeholder="Author" />
+      <input name="finished" placeholder="YYYY-MM" size="7" />
+      <select name="format"><option>paperback</option><option>hardcover</option><option>ebook</option></select>
+      <input name="pages" placeholder="pages" size="5" inputmode="numeric" />
+      <input name="isbn" placeholder="isbn" size="13" />
+      <input name="tags" placeholder="tags, comma" size="10" />
+      <textarea name="thoughts" placeholder="thoughts (optional)" rows="1"></textarea>
+      <button class="ed-del" title="remove">×</button>
+    </li>
+  </template>
+
+  <style>
+    .ed-bar{display:flex;gap:14px;align-items:center;margin-bottom:22px}
+    .ed-btn{font:inherit;padding:6px 14px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;border-radius:2px}
+    .ed-h{font-family:var(--serif);font-weight:400;font-size:18px;margin:26px 0 8px}
+    .ed-list{list-style:none;margin:0;padding:0;min-height:24px}
+    .ed-row{display:grid;grid-template-columns:18px minmax(150px,2fr) minmax(120px,1.4fr) 78px 104px 58px 112px 96px minmax(120px,1.4fr) 22px;gap:6px;align-items:start;padding:8px 0;border-bottom:1px solid var(--rule);background:var(--paper)}
+    .ed-row.drag-over{border-top:2px solid var(--ink)}
+    .ed-row input,.ed-row select,.ed-row textarea{font:inherit;font-size:13px;padding:4px 6px;border:1px solid var(--rule);background:#fff;border-radius:2px;width:100%;min-width:0}
+    .ed-row textarea{resize:vertical}
+    .ed-grip{cursor:grab;color:var(--ink-faint);user-select:none;padding-top:5px}
+    .ed-del{font:inherit;border:0;background:none;color:var(--ink-faint);cursor:pointer;padding-top:4px}
+    .ed-del:hover{color:var(--ink)}
+    .ed-add{font:inherit;font-size:13px;border:0;background:none;color:var(--ink-soft);cursor:pointer;padding:8px 0;text-decoration:underline;text-underline-offset:3px}
+    #status{font-size:13px;color:var(--ink-soft)}
+    @media (max-width:900px){.ed-row{grid-template-columns:18px 1fr 1fr 22px}.ed-row>*:nth-child(n+4):not(:last-child){grid-column:span 1}}
+  </style>
+
+  <script>
+    const tpl = document.getElementById('row') as HTMLTemplateElement;
+    const status = document.getElementById('status')!;
+    const lists = [...document.querySelectorAll<HTMLOListElement>('.ed-list')];
+    let dragging: HTMLLIElement | null = null;
+
+    function row(b: any = {}): HTMLLIElement {
+      const li = tpl.content.firstElementChild!.cloneNode(true) as HTMLLIElement;
+      const set = (n: string, v: any) => { const el = li.querySelector<HTMLInputElement>(`[name=${n}]`); if (el && v != null) el.value = String(v); };
+      set('title', b.title); set('author', b.author); set('finished', b.finished); set('format', b.format ?? 'paperback');
+      set('pages', b.pages); set('isbn', b.isbn); set('tags', (b.tags ?? []).join(', ')); set('thoughts', b.thoughts);
+      li.querySelector('.ed-del')!.addEventListener('click', () => li.remove());
+      li.addEventListener('dragstart', (e) => { dragging = li; li.style.opacity = '.4'; e.dataTransfer!.effectAllowed = 'move'; });
+      li.addEventListener('dragend', () => { dragging = null; li.style.opacity = ''; lists.forEach(l => [...l.children].forEach(c => c.classList.remove('drag-over'))); });
+      li.addEventListener('dragover', (e) => { e.preventDefault(); if (dragging && dragging !== li) li.classList.add('drag-over'); });
+      li.addEventListener('dragleave', () => li.classList.remove('drag-over'));
+      li.addEventListener('drop', (e) => { e.preventDefault(); if (dragging && dragging !== li) li.before(dragging); li.classList.remove('drag-over'); });
+      return li;
+    }
+    function read(li: Element) {
+      const g = (n: string) => (li.querySelector<HTMLInputElement>(`[name=${n}]`)?.value ?? '').trim();
+      const tags = g('tags').split(',').map(t => t.trim()).filter(Boolean);
+      const pages = Number(g('pages'));
+      return { title: g('title'), author: g('author'), finished: g('finished') || undefined, format: g('format'),
+               pages: pages || undefined, isbn: g('isbn') || undefined, tags: tags.length ? tags : undefined, thoughts: g('thoughts') || undefined };
+    }
+
+    lists.forEach((l) => {
+      /* dropping on empty space at the end of a list appends */
+      l.addEventListener('dragover', (e) => e.preventDefault());
+      l.addEventListener('drop', (e) => { if (dragging && e.target === l) l.append(dragging); });
+    });
+    document.querySelectorAll<HTMLButtonElement>('.ed-add').forEach((b) =>
+      b.addEventListener('click', () => document.querySelector(`.ed-list[data-shelf=${b.dataset.add}]`)!.append(row())));
+
+    document.getElementById('save')!.addEventListener('click', async () => {
+      const payload: Record<string, any[]> = {};
+      lists.forEach((l) => { payload[l.dataset.shelf!] = [...l.children].map(read).filter(b => b.title); });
+      status.textContent = 'saving…';
+      const r = await fetch('/__books', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) });
+      status.textContent = r.ok ? `saved ${new Date().toLocaleTimeString()}` : 'save failed';
+    });
+
+    fetch('/__books').then(r => r.json()).then((data) => {
+      lists.forEach((l) => (data[l.dataset.shelf!] ?? []).forEach((b: any) => l.append(row(b))));
+    });
+  </script>
+</Base>
