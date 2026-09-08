@@ -8,7 +8,7 @@
   --d-health:#2F6B5E;
   --d-compliance:#7A3E52;
   --d-sport:#3B5486;
-  --d-data:#8A6420;
+  --d-other:#8A6420;
 
   --serif:"Newsreader",Georgia,serif;
   --sans:"Instrument Sans",system-ui,sans-serif;
@@ -108,7 +108,7 @@ h1,h2,h3,h4{margin:0}
 .health{color:var(--d-health)}
 .compliance{color:var(--d-compliance)}
 .sport{color:var(--d-sport)}
-.data{color:var(--d-data)}
+.other{color:var(--d-other)}
 
 .dom-mark{
   flex:none;display:inline-block;width:9px;height:9px;margin-right:12px;
@@ -117,7 +117,7 @@ h1,h2,h3,h4{margin:0}
 .projects li[data-domain=health] a:hover,.projects li[data-domain=health] a:focus-visible{background:color-mix(in srgb,var(--d-health) 8%,transparent)}
 .projects li[data-domain=compliance] a:hover,.projects li[data-domain=compliance] a:focus-visible{background:color-mix(in srgb,var(--d-compliance) 8%,transparent)}
 .projects li[data-domain=sport] a:hover,.projects li[data-domain=sport] a:focus-visible{background:color-mix(in srgb,var(--d-sport) 8%,transparent)}
-.projects li[data-domain=data] a:hover,.projects li[data-domain=data] a:focus-visible{background:color-mix(in srgb,var(--d-data) 8%,transparent)}
+.projects li[data-domain=other] a:hover,.projects li[data-domain=other] a:focus-visible{background:color-mix(in srgb,var(--d-other) 8%,transparent)}
 
 /* ---------------- domain filter (/work) ---------------- */
 .filters{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0 0 10px;padding:0;font-size:13px;font-weight:500}
@@ -128,17 +128,17 @@ h1,h2,h3,h4{margin:0}
 .filters a.health{background:color-mix(in srgb,var(--d-health) 55%,var(--paper))}
 .filters a.compliance{background:color-mix(in srgb,var(--d-compliance) 55%,var(--paper))}
 .filters a.sport{background:color-mix(in srgb,var(--d-sport) 55%,var(--paper))}
-.filters a.data{background:color-mix(in srgb,var(--d-data) 55%,var(--paper))}
+.filters a.other{background:color-mix(in srgb,var(--d-other) 55%,var(--paper))}
 .filters a[aria-current]{background:var(--ink)}
 .filters a.health[aria-current]{background:var(--d-health)}
 .filters a.compliance[aria-current]{background:var(--d-compliance)}
 .filters a.sport[aria-current]{background:var(--d-sport)}
-.filters a.data[aria-current]{background:var(--d-data)}
+.filters a.other[aria-current]{background:var(--d-other)}
 .filters a:hover,.filters a:focus-visible{filter:none}
 .filters a.health:hover{background:var(--d-health)}
 .filters a.compliance:hover{background:var(--d-compliance)}
 .filters a.sport:hover{background:var(--d-sport)}
-.filters a.data:hover{background:var(--d-data)}
+.filters a.other:hover{background:var(--d-other)}
 
 /* ---------------- writing ---------------- */
 .writing{list-style:none;margin:0;padding:0}
@@ -192,7 +192,7 @@ h1,h2,h3,h4{margin:0}
     radial-gradient(circle at 34% 30%, #F2EFE8 0 40%, transparent 41%),
     radial-gradient(circle at 62% 64%, var(--d-sport) 0 4%, transparent 5%),
     radial-gradient(circle at 42% 47%, var(--d-health) 0 4%, transparent 5%),
-    radial-gradient(circle at 30% 61%, var(--d-data) 0 3.5%, transparent 4.5%),
+    radial-gradient(circle at 30% 61%, var(--d-other) 0 3.5%, transparent 4.5%),
     #D9D4C9;
 }
 .globe-line p{margin:0;font-size:15px;color:var(--ink-soft);max-width:42ch}

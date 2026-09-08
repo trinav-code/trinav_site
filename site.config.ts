@@ -56,13 +56,14 @@ export const site = {
 
 /**
  * The only colour on the site. Each tag is an information channel,
- * not decoration. Adding a fifth means adding a real fifth domain.
+ * not decoration. `other` is the catch-all until a project earns a domain
+ * of its own. Adding a fifth means adding a real fifth domain.
  */
 export const domains = {
   health: { label: "Health AI", color: "#2F6B5E" },
   compliance: { label: "Compliance", color: "#7A3E52" },
   sport: { label: "Sports", color: "#3B5486" },
-  data: { label: "Data", color: "#8A6420" },
+  other: { label: "Other", color: "#8A6420" },
 } as const;
 
 export type Domain = keyof typeof domains;

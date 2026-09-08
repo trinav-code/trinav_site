@@ -49,7 +49,7 @@ information, never to decorate:
 --d-health      #2F6B5E
 --d-compliance  #7A3E52
 --d-sport       #3B5486
---d-data        #8A6420
+--d-other       #8A6420
 ```
 
 Type: Newsreader (serif) for hero prose, headings and project titles.
