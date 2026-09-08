@@ -41,7 +41,7 @@ export const site = {
      * your shelf page, or https://www.goodreads.com/review/list_rss/<user-id>?shelf=read
      * Empty string skips the import.
      */
-    goodreads: "",
+    goodreads: "https://www.goodreads.com/review/list_rss/171932170?shelf=read",
   },
 
   /** /resume redirects here. Update the target, never the path. */

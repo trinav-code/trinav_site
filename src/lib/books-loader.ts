@@ -1,7 +1,7 @@
 import type { Loader } from 'astro/loaders';
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import YAML from 'yaml';
-import { decode } from 'jpeg-js';
+import sharp from 'sharp';
 import { XMLParser } from 'fast-xml-parser';
 import { site } from '../../site.config';
 
@@ -27,6 +27,8 @@ export interface Book extends RawBook {
 
 const CACHE = '.cache/books.json';
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+/** Match key: title before any subtitle colon. */
+const titleKey = (s: string) => norm(s.split(':')[0]);
 const UA = { 'user-agent': 'personal-site build (github.com/trinav-code/trinav_site)' };
 
 function stripFences(content: string) {
@@ -52,34 +54,43 @@ async function fetchBytes(url: string): Promise<Uint8Array | undefined> {
   for (let i = 0; i < 3; i++) {
     try {
       const res = await fetch(url, { signal: AbortSignal.timeout(20000), headers: UA, redirect: 'follow' });
-      if (res.ok && (res.headers.get('content-type') ?? '').includes('jpeg')) return new Uint8Array(await res.arrayBuffer());
+      if (res.ok && (res.headers.get('content-type') ?? '').startsWith('image/')) return new Uint8Array(await res.arrayBuffer());
       if (res.status === 404) return;
     } catch {}
     await new Promise((r) => setTimeout(r, 800 * (i + 1)));
   }
 }
 
-/** Dominant colour: bucket saturated, mid-luminance pixels; average the top bucket. */
-function dominantColor(jpeg: Uint8Array): string | undefined {
-  let img;
-  try { img = decode(jpeg, { useTArray: true, maxMemoryUsageInMB: 64 }); } catch { return; }
-  const { data, width, height } = img;
-  const buckets = new Map<number, { n: number; r: number; g: number; b: number }>();
-  const step = Math.max(1, Math.floor((width * height) / 20000));
-  for (let i = 0; i < width * height; i += step) {
-    const r = data[i * 4], g = data[i * 4 + 1], b = data[i * 4 + 2];
-    const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
-    const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-    if (mx - mn < 28 || lum > 235 || lum < 18) continue;
-    const key = ((r >> 5) << 6) | ((g >> 5) << 3) | (b >> 5);
-    const bk = buckets.get(key) ?? { n: 0, r: 0, g: 0, b: 0 };
-    bk.n++; bk.r += r; bk.g += g; bk.b += b;
-    buckets.set(key, bk);
-  }
-  let best: { n: number; r: number; g: number; b: number } | undefined;
-  for (const bk of buckets.values()) if (!best || bk.n > best.n) best = bk;
+/** Dominant colour. First the most common saturated, mid-luminance bucket;
+ *  if the cover is near-monochrome, the most common mid-luminance bucket of
+ *  any saturation; failing that, the plain average. Every cover gets a band. */
+async function dominantColor(bytes: Uint8Array): Promise<string | undefined> {
+  let data: Buffer, width: number, height: number;
+  try {
+    const out = await sharp(bytes).resize(120, 120, { fit: 'inside' }).removeAlpha().raw().toBuffer({ resolveWithObject: true });
+    data = out.data; width = out.info.width; height = out.info.height;
+  } catch { return; }
+  const step = 1;
+  type Bk = { n: number; r: number; g: number; b: number };
+  const pass = (minSat: number, minLum: number, maxLum: number): Bk | undefined => {
+    const buckets = new Map<number, Bk>();
+    for (let i = 0; i < width * height; i += step) {
+      const r = data[i * 3], g = data[i * 3 + 1], b = data[i * 3 + 2];
+      const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+      const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+      if (mx - mn < minSat || lum > maxLum || lum < minLum) continue;
+      const key = ((r >> 5) << 6) | ((g >> 5) << 3) | (b >> 5);
+      const bk = buckets.get(key) ?? { n: 0, r: 0, g: 0, b: 0 };
+      bk.n++; bk.r += r; bk.g += g; bk.b += b;
+      buckets.set(key, bk);
+    }
+    let best: Bk | undefined;
+    for (const bk of buckets.values()) if (!best || bk.n > best.n) best = bk;
+    return best;
+  };
+  const best = pass(28, 18, 235) ?? pass(0, 40, 215) ?? pass(0, 0, 256);
   if (!best) return;
-  const hex = (v: number) => Math.round(v / best!.n).toString(16).padStart(2, '0');
+  const hex = (v: number) => Math.round(v / best.n).toString(16).padStart(2, '0');
   return `#${hex(best.r)}${hex(best.g)}${hex(best.b)}`;
 }
 
@@ -95,6 +106,7 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
 
   const found: Partial<Book> = {};
   try {
+    if (!raw.cover) {
     const q = raw.isbn
       ? `q=isbn:${encodeURIComponent(raw.isbn)}`
       : `title=${encodeURIComponent(raw.title)}&author=${encodeURIComponent(raw.author)}`;
@@ -123,6 +135,7 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
         } catch (e) { log(`no description for ${raw.title}: ${(e as Error).message}`); }
       }
     }
+    }
     /* Fetch the cover once, sample its colour, and keep a local copy so the
        site never waits on Open Library at request time. */
     const coverSrc = raw.cover ?? found.coverUrl;
@@ -130,7 +143,7 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
       const slug = key.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
       const small = await fetchBytes(coverSrc);
       if (small && small.length > 1000) {
-        found.color = dominantColor(small);
+        found.color = await dominantColor(small);
         await mkdir('public/covers', { recursive: true });
         await writeFile(`public/covers/${slug}-m.jpg`, small);
         found.coverUrl = `/covers/${slug}-m.jpg`;
@@ -174,10 +187,12 @@ async function goodreadsBooks(feedUrl: string, log: (m: string) => void): Promis
       const finished = d && !isNaN(d.getTime()) ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` : undefined;
       const pages = Number(text(it.num_pages)) || undefined;
       const isbn = text(it.isbn) || undefined;
-      const cover = text(it.book_large_image_url) || undefined;
+      const cover = (text(it.book_large_image_url) || undefined)?.replace(/\._S[XY]\d+_(?=\.)/, '');
+      const added = text(it.user_date_added);
       const thoughts = text(it.user_review).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || undefined;
-      return { title: text(it.title).trim(), author: text(it.author_name).trim(), finished, pages, isbn, cover, thoughts, source: 'goodreads' as const };
-    }).filter((b) => b.title);
+      return { title: text(it.title).trim(), author: text(it.author_name).trim(), finished, pages, isbn, cover, thoughts, source: 'goodreads' as const,
+               _sort: (d && !isNaN(d.getTime()) ? d : new Date(added || 0)).getTime() };
+    }).filter((b) => b.title).sort((a, b) => b._sort - a._sort).map(({ _sort, ...b }) => b);
   } catch (e) {
     log(`Goodreads feed skipped (${(e as Error).message}).`);
     return [];
@@ -197,18 +212,33 @@ export function booksLoader(path = 'books.md'): Loader {
       try { cache = JSON.parse(await readFile(CACHE, 'utf8')); } catch {}
 
       const log = (m: string) => logger.warn(m);
+      /* Goodreads is the primary source for cover, ISBN and page count.
+         Open Library is only consulted for books Goodreads does not have.
+         Titles, dates, formats and thoughts in books.md always win. */
+      const gr = await goodreadsBooks(site.feeds.goodreads, log);
+      const grByTitle = new Map(gr.map((b) => [titleKey(b.title), b]));
+      let matched = 0;
+      const withGoodreads = (b: RawBook): RawBook => {
+        const g = grByTitle.get(titleKey(b.title));
+        if (!g) return b;
+        matched++;
+        return { ...b, cover: b.cover ?? g.cover, isbn: b.isbn ?? g.isbn, pages: b.pages ?? g.pages };
+      };
+
       /* Sequential on purpose: Open Library throttles parallel bursts. */
       const current: Book[] = [];
-      for (const b of data.current ?? []) current.push(await enrich(b, cache, log));
+      for (const b of data.current ?? []) current.push(await enrich(withGoodreads(b), cache, log));
       const recent: Book[] = [];
-      for (const b of data.recent ?? []) recent.push(await enrich(b, cache, log));
+      for (const b of data.recent ?? []) recent.push(await enrich(withGoodreads(b), cache, log));
 
-      /* Goodreads: append anything on the read shelf that books.md does not
-         already list (matched on title). The file always wins. */
-      const listed = new Set([...current, ...recent].map((b) => norm(b.title)));
-      const fromGoodreads = (await goodreadsBooks(site.feeds.goodreads, log)).filter((b) => !listed.has(norm(b.title)));
+      /* Then append anything on the read shelf that books.md does not list. */
+      const listed = new Set([...current, ...recent].map((b) => titleKey(b.title)));
+      const fromGoodreads = gr.filter((b) => !listed.has(titleKey(b.title)));
       for (const b of fromGoodreads) recent.push(await enrich(b, cache, log));
       if (fromGoodreads.length) logger.info(`${fromGoodreads.length} books added from Goodreads.`);
+      logger.info(`${matched} of ${(data.current?.length ?? 0) + (data.recent?.length ?? 0)} listed books matched Goodreads.`);
+      const noCover = [...current, ...recent].filter((b) => !b.coverUrl).map((b) => b.title);
+      if (noCover.length) logger.warn(`No cover: ${noCover.join('; ')}`);
 
       try { await mkdir('.cache', { recursive: true }); await writeFile(CACHE, JSON.stringify(cache, null, 2)); } catch {}
 
