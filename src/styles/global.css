@@ -172,7 +172,8 @@ h1,h2,h3,h4{margin:0}
 .elsewhere a{color:var(--ink);text-underline-offset:3px}
 
 /* ---------------- currently ---------------- */
-.now{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;padding-top:20px}
+.now{display:grid;grid-template-columns:1fr;gap:36px;padding-top:20px}
+.now-reading .aside{max-width:50ch}
 .now h4{font-size:14px;font-weight:500;color:var(--ink-faint);margin-bottom:10px}
 .now p{margin:0;font-size:15.5px}
 .now-list{list-style:none;margin:0;padding:0}
@@ -219,13 +220,14 @@ h1,h2,h3,h4{margin:0}
 .meta a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
 
 /* ---------------- /reading shelf ---------------- */
+.shelf-wrap{display:inline-block;max-width:100%;overflow-x:auto;vertical-align:bottom}
 .shelf{
-  list-style:none;margin:6px 0 0;padding:0 4px;
+  list-style:none;margin:6px 0 0;padding:0 4px 0 6px;
   display:flex;align-items:flex-end;gap:0;
   perspective:900px;
 }
 .spine-slot{position:relative;display:flex;align-items:flex-end;height:var(--h);transform-origin:bottom center}
-.spine-slot.lean{transform-origin:bottom left;transform:rotate(8deg);margin-right:calc(var(--h) * .13)}
+.spine-slot.lean{transform-origin:bottom left;transform:rotate(4deg);margin-right:calc(var(--h) * .07)}
 .spine{
   display:block;width:var(--w);height:var(--h);padding:0;border:0;cursor:pointer;
   background:var(--ink);border-radius:1px 1px 0 0;position:relative;overflow:hidden;
@@ -240,12 +242,20 @@ h1,h2,h3,h4{margin:0}
 .spine:hover,.spine:focus-visible{background:var(--ink-soft)}
 .spine.pulled{transform:translateY(-16px) rotateY(-58deg) scale(1.08);background:var(--ink-soft)}
 .spine-title{
-  position:absolute;top:7px;left:50%;transform:translateX(-50%);
-  writing-mode:vertical-rl;font-family:var(--sans);font-size:9.5px;font-weight:500;letter-spacing:.02em;
+  position:absolute;top:8px;left:50%;transform:translateX(-50%);
+  writing-mode:vertical-rl;font-family:var(--sans);font-size:10.5px;font-weight:500;letter-spacing:.02em;
   color:var(--paper);white-space:nowrap;max-height:calc(var(--h) - 22px);overflow:hidden;text-overflow:ellipsis;
   pointer-events:none;
 }
 .shelf-board{height:1px;background:var(--ink);opacity:.85}
+
+/* The current book stands face-out at the left end, leaning back onto the row. */
+.face-slot{transform-origin:bottom right;transform:rotate(-3deg);margin-right:10px;z-index:1}
+.spine.face{background:var(--paper);box-shadow:none;border:1px solid var(--rule)}
+.face-cover{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .3s ease}
+.spine.face:hover .face-cover,.spine.face:focus-visible .face-cover,.spine.face.pulled .face-cover{filter:none}
+.spine.face.pulled{transform:translateY(-10px) scale(1.04)}
+.spine.face::after{height:0}
 
 .book-panel{
   border:1px solid var(--rule);background:var(--paper);color:var(--ink);

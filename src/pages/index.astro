@@ -59,12 +59,12 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
   <section class="block">
     <BlockHead title={copy.home.currently.heading} />
     <div class="now">
-      <div>
+      <div class="now-reading">
         <h4>{copy.home.currently.reading}</h4>
-        <Shelf books={[...current, ...recent]} currentCount={current.length} scale={0.85} />
+        <Shelf books={[...current, ...recent]} currentCount={current.length} scale={1} />
         <p class="aside">{copy.home.currently.readingAside}</p>
       </div>
-      <div>
+      <div class="now-listening">
         <h4>{copy.home.currently.listening}</h4>
         <p>{copy.home.currently.listeningPlaceholder}</p>
         <p class="aside">{copy.home.currently.listeningAside}</p>
