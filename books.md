@@ -7,8 +7,7 @@
 # Per book:
 #   title, author   required
 #   finished        YYYY-MM, or just YYYY when the month is fuzzy
-#   format          physical | ebook | audiobook   (default physical; ebook = thin spine,
-#                   audiobook = narrow marker instead of a spine)
+#   format          physical | ebook | audiobook   (default physical; ebook renders slightly thinner)
 #   pages           spine thickness; if absent the build takes Open Library's median
 #   isbn            optional, makes the cover lookup exact
 #   cover           optional URL override; otherwise the build asks Open Library
@@ -51,12 +50,12 @@ recent:
   - title: The Only One Left
     author: Riley Sager
     finished: 2026-06
-    format: audiobook   # placeholder so the audiobook treatment can be judged
+    format: physical
 
   - title: The Secret of Secrets
     author: Dan Brown
     finished: 2026-05
-    format: ebook   # placeholder so the ebook treatment can be judged
+    format: physical
 
   - title: Convenience Store Woman
     author: Sayaka Murata

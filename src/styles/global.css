@@ -227,7 +227,7 @@ h1,h2,h3,h4{margin:0}
   perspective:900px;
 }
 .spine-slot{position:relative;display:flex;align-items:flex-end;height:var(--h);transform-origin:bottom center}
-.spine-slot.lean{transform-origin:bottom right;transform:rotate(-4deg);margin-left:var(--gap)}
+.spine-slot.lean{transform-origin:bottom left;transform:rotate(4deg);margin-right:var(--gap)}
 .spine{
   display:block;width:var(--w);height:var(--h);padding:0;border:0;cursor:pointer;
   background:var(--spine,var(--ink));border-radius:1px 1px 0 0;position:relative;overflow:hidden;
@@ -244,16 +244,10 @@ h1,h2,h3,h4{margin:0}
   pointer-events:none;
 }
 .shelf-board{height:1px;background:var(--ink);opacity:.85}
-.fmt-ebook .spine-title{font-size:8.5px;top:6px}
-.fmt-audiobook .spine{border-radius:4px 4px 0 0;box-shadow:none}
-.audio-mark{
-  position:absolute;left:50%;top:9px;width:4px;height:4px;margin-left:-2px;border-radius:50%;
-  background:var(--spine-text,var(--paper));opacity:.85;
-  box-shadow:0 8px 0 0 var(--spine-text,var(--paper)),0 16px 0 0 var(--spine-text,var(--paper));
-}
+.fmt-ebook .spine-title{font-size:9.5px}
 
 /* The current book stands face-out at the left end, leaning back onto the row. */
-.face-slot{transform-origin:bottom left;transform:rotate(3deg);margin-right:var(--gap);z-index:1}
+.face-slot{transform-origin:bottom right;transform:rotate(-3deg);margin-right:2px;z-index:1}
 .spine.face{background:var(--paper);box-shadow:none;border:1px solid var(--rule)}
 .face-cover{display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);transition:filter .3s ease}
 .spine.face:hover .face-cover,.spine.face:focus-visible .face-cover,.spine.face.pulled .face-cover{filter:none}
