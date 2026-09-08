@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../../copy';
 import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import ProjectList from '../../components/ProjectList.astro';
@@ -8,13 +9,13 @@ const all = (await getCollection('projects')).sort((a, b) => a.data.order - b.da
 const tag = Astro.url.searchParams.get('domain') as Domain | null;
 const keys = Object.keys(domains) as Domain[];
 ---
-<Base title="Work" description="Every project, filterable by domain.">
+<Base title={copy.work.title} description={copy.work.description}>
   <header class="page-head">
-    <h1>Everything I have shipped or nearly shipped, by domain.</h1>
+    <h1>{copy.work.heading}</h1>
   </header>
   <section class="block">
-    <ul class="filters" aria-label="Filter by domain">
-      <li><a href="/work" aria-current="page">All</a></li>
+    <ul class="filters" aria-label={copy.work.filterLabel}>
+      <li><a href="/work" aria-current="page">{copy.work.filterAll}</a></li>
       {keys.map((k) => (
         <li><a href={`/work?domain=${k}`} class={k}>{domains[k].label}</a></li>
       ))}

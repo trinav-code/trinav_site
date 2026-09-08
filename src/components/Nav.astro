@@ -1,11 +1,12 @@
 ---
+import { copy } from '../../copy';
 import { site } from '../../site.config';
 const path = Astro.url.pathname;
 const items = [
   { href: '/', label: site.shortName },
-  { href: '/work', label: 'Work' },
-  { href: '/writing', label: 'Writing' },
-  { href: '/about', label: 'About' },
+  { href: '/work', label: copy.nav.work },
+  { href: '/writing', label: copy.nav.writing },
+  { href: '/about', label: copy.nav.about },
 ];
 const isCurrent = (href: string) =>
   href === '/' ? path === '/' : path === href || path.startsWith(href + '/');

@@ -4,10 +4,10 @@
    a click strikes the membrane at the cursor and excites every mode by how
    much it moves at that point, each decaying at its own inharmonic frequency.
    The only JS island on the home page. */
-interface Props { size?: number }
-const { size = 200 } = Astro.props;
+interface Props { size?: number; label: string }
+const { size = 200, label } = Astro.props;
 ---
-<canvas id="drum" class="drum" width={size * 2} height={size * 2} style={`width:${size}px;height:${size}px`} aria-label="A vibrating drumhead. Click to strike it." role="img"></canvas>
+<canvas id="drum" class="drum" width={size * 2} height={size * 2} style={`width:${size}px;height:${size}px`} aria-label={label} role="img"></canvas>
 <script>
   const cv = document.getElementById('drum') as HTMLCanvasElement | null;
   if (cv) run(cv);

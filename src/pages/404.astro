@@ -1,9 +1,10 @@
 ---
+import { copy } from '../../copy';
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Not found">
+<Base title={copy.notFound.title}>
   <header class="page-head">
-    <h1>Nothing here.</h1>
-    <p><a href="/">Back to the start.</a></p>
+    <h1>{copy.notFound.heading}</h1>
+    <p><a href="/">{copy.notFound.back}</a></p>
   </header>
 </Base>

@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../copy';
 import { getCollection, getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import BlockHead from '../components/BlockHead.astro';
@@ -26,42 +27,40 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
 <Base>
   <header class="hero">
     <div class="hero-text">
-      <p class="load">I build clinical AI that has to work when there is a real patient on the other end of it.</p>
-      <p class="load quiet">Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.</p>
-      <p class="load quiet">I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.</p>
+      {copy.home.hero.map((line, i) => <p class={i === 0 ? 'load' : 'load quiet'}>{line}</p>)}
     </div>
-    <Drum size={200} />
+    <Drum size={200} label={copy.home.drumLabel} />
   </header>
 
   <section class="block">
-    <BlockHead title="Work" href="/about#work" link={`All ${countWord(roles.length)} roles`} />
+    <BlockHead title={copy.home.work.heading} href="/about#work" link={copy.home.work.link(countWord(roles.length))} />
     <Entries items={roles.slice(0, 2).map((r) => ({
       title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
     }))} />
   </section>
 
   <section class="block">
-    <BlockHead title="Where I studied" href="/about" link="How this happened" />
+    <BlockHead title={copy.home.education.heading} href="/about" link={copy.home.education.link} />
     <Entries items={education.map((e) => ({
       title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, start: e.start, end: e.end,
     }))} />
   </section>
 
   <section class="block">
-    <BlockHead title="Selected projects" href="/work" link={`All ${countWord(allProjects.length)}`} />
+    <BlockHead title={copy.home.projects.heading} href="/work" link={copy.home.projects.link(countWord(allProjects.length))} />
     <ProjectList projects={featured} />
   </section>
 
   <section class="block">
-    <BlockHead title="Writing" href="/writing" link="Archive" />
+    <BlockHead title={copy.home.writing.heading} href="/writing" link={copy.home.writing.link} />
     <WritingList posts={posts.slice(0, 3)} />
   </section>
 
   <section class="block">
-    <BlockHead title="Currently" />
+    <BlockHead title={copy.home.currently.heading} />
     <div class="now">
       <div>
-        <h4>Reading</h4>
+        <h4>{copy.home.currently.reading}</h4>
         <ul class="now-list">
           {current[0] && (
             <li class="now-row">
@@ -76,18 +75,18 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
             </li>
           ))}
         </ul>
-        <p class="aside">Pulled from my notes, so it stays honest about the ones I abandoned. <a href="/reading">The shelf</a></p>
+        <p class="aside">{copy.home.currently.readingAside} <a href="/reading">{copy.home.currently.shelfLink}</a></p>
       </div>
       <div>
-        <h4>Listening</h4>
-        <p>Live from Spotify</p>
-        <p class="aside">Eighteen years of tabla means I notice the percussion first, every time.</p>
+        <h4>{copy.home.currently.listening}</h4>
+        <p>{copy.home.currently.listeningPlaceholder}</p>
+        <p class="aside">{copy.home.currently.listeningAside}</p>
       </div>
     </div>
 
     <div class="globe-line">
       <div class="globe-dot" aria-hidden="true"></div>
-      <p>Everywhere I have been so far, on one slowly turning ball. <a href="/globe">Open the globe</a></p>
+      <p>{copy.home.currently.globe} <a href="/globe">{copy.home.currently.globeLink}</a></p>
     </div>
   </section>
 </Base>

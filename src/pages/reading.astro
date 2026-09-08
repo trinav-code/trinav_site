@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../copy';
 import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import { when } from '../lib/format';
@@ -12,14 +13,14 @@ const HEIGHT = { paperback: 118, hardcover: 146, ebook: 98 } as const;
 const thickness = (pages?: number) => Math.round(Math.min(22, Math.max(7, (pages ?? 240) / 24)));
 const leaners = books.map((_, i) => i).filter((i) => i % 4 === 2 && i < books.length - 1).slice(0, 2);
 ---
-<Base title="Reading" description="What I'm reading and what I finished lately.">
+<Base title={copy.reading.title} description={copy.reading.description}>
   <header class="page-head">
-    <h1>The shelf. One book at a time, a few a month, no ratings.</h1>
-    <p>Spine thickness is the page count, height is the format, and the sliver of colour at the base is sampled from the real cover. Click one.</p>
+    <h1>{copy.reading.heading}</h1>
+    <p>{copy.reading.intro}</p>
   </header>
 
   <section class="block">
-    <ul class="shelf" aria-label="Bookshelf">
+    <ul class="shelf" aria-label={copy.reading.shelfLabel}>
       {books.map((b, i) => {
         const w = thickness(b.pages);
         const h = HEIGHT[b.format];
@@ -32,14 +33,14 @@ const leaners = books.map((_, i) => i).filter((i) => i % 4 === 2 && i < books.le
             <div popover id={`book-${i}`} class="book-panel" data-panel={i}>
               <div class="book-panel-inner">
                 {b.coverLarge
-                  ? <img class="book-cover" src={b.coverLarge} alt={`Cover of ${b.title}`} loading="lazy" />
+                  ? <img class="book-cover" src={b.coverLarge} alt={copy.reading.coverAlt(b.title)} loading="lazy" />
                   : <div class="book-cover book-cover-blank" aria-hidden="true"></div>}
                 <div class="book-meta">
                   <h2>{b.title}</h2>
-                  <p class="book-author">{b.author}{b.finished ? ` · finished ${when(b.finished)}` : i < currentCount ? ' · reading now' : ''}</p>
+                  <p class="book-author">{b.author}{b.finished ? ` · ${copy.reading.finished(when(b.finished))}` : i < currentCount ? ` · ${copy.reading.readingNow}` : ''}</p>
                   {b.blurb && <p class="book-blurb">{b.blurb}</p>}
                   {b.thoughts && <p class="book-thoughts">{b.thoughts}</p>}
-                  <button type="button" class="book-close" popovertarget={`book-${i}`} popovertargetaction="hide">Close</button>
+                  <button type="button" class="book-close" popovertarget={`book-${i}`} popovertargetaction="hide">{copy.reading.close}</button>
                 </div>
               </div>
             </div>
@@ -51,13 +52,13 @@ const leaners = books.map((_, i) => i).filter((i) => i % 4 === 2 && i < books.le
   </section>
 
   <section class="block">
-    <div class="block-head"><h2>As a list</h2></div>
+    <div class="block-head"><h2>{copy.reading.listHeading}</h2></div>
     <ol class="shelf-list">
       {books.map((b, i) => (
         <li>
           <span class="sl-title">{b.title}</span>
           <span class="sl-author">{b.author}</span>
-          <span class="sl-when">{b.finished ? when(b.finished) : i < currentCount ? 'now' : ''}</span>
+          <span class="sl-when">{b.finished ? when(b.finished) : i < currentCount ? copy.reading.listNow : ''}</span>
         </li>
       ))}
     </ol>

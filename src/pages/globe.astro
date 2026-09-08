@@ -1,9 +1,10 @@
 ---
+import { copy } from '../../copy';
 import Base from '../layouts/Base.astro';
 ---
-<Base title="Globe" description="Everywhere so far, on one slowly turning ball.">
+<Base title={copy.globe.title} description={copy.globe.description}>
   <header class="page-head">
-    <h1>Everywhere I have been so far.</h1>
-    <p>The globe itself arrives in a later pass. This page holds its place.</p>
+    <h1>{copy.globe.heading}</h1>
+    <p>{copy.globe.intro}</p>
   </header>
 </Base>

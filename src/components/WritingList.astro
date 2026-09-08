@@ -1,9 +1,10 @@
 ---
+import { copy } from '../../copy';
 import type { FeedItem } from '../lib/feed';
 interface Props { posts: FeedItem[] }
 const { posts } = Astro.props;
 const fmt = (d?: Date) =>
-  d ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Draft';
+  d ? d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : copy.writing.draft;
 ---
 <ul class="writing">
   {posts.map((p) => (
@@ -11,9 +12,9 @@ const fmt = (d?: Date) =>
       <a href={p.href} rel={p.external ? 'external noopener' : undefined}>
         <span class="w-title">
           {p.title}
-          {p.external && <span class="w-ext" aria-label="on Medium" title="On Medium">↗</span>}
+          {p.external && <span class="w-ext" aria-label={copy.writing.externalLabel}>{copy.writing.externalMarker}</span>}
         </span>
-        <span class="w-when">{p.draft ? 'Draft' : fmt(p.date)}</span>
+        <span class="w-when">{p.draft ? copy.writing.draft : fmt(p.date)}</span>
       </a>
     </li>
   ))}

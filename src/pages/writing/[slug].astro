@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../../copy';
 import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 
@@ -8,7 +9,7 @@ export async function getStaticPaths() {
 }
 const { p } = Astro.props;
 const { Content } = await render(p);
-const when = p.data.draft ? 'Draft' : p.data.date?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+const when = p.data.draft ? copy.writing.draft : p.data.date?.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 ---
 <Base title={p.data.title} description={p.data.summary}>
   <header class="page-head">

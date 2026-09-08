@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../../copy';
 import Base from '../../layouts/Base.astro';
 import WritingList from '../../components/WritingList.astro';
 import { writingFeed } from '../../lib/feed';
@@ -7,15 +8,15 @@ import { site } from '../../../site.config';
 const posts = await writingFeed();
 const byYear = new Map<string, typeof posts>();
 for (const p of posts) {
-  const y = p.date ? String(p.date.getFullYear()) : 'Drafts';
+  const y = p.date ? String(p.date.getFullYear()) : copy.writing.draftsGroup;
   byYear.set(y, [...(byYear.get(y) ?? []), p]);
 }
 const external = posts.filter((p) => p.external).length;
 ---
-<Base title="Writing" description="Essays and notes, mostly about building things that have to be right.">
+<Base title={copy.writing.title} description={copy.writing.description}>
   <header class="page-head">
-    <h1>I write when a project leaves a question I could not answer while building it.</h1>
-    <p>Mostly the maths behind something that looked simple, or the part of a system that turned out to be the whole system. Long form lives on Medium for now; the shorter notes will live here.</p>
+    <h1>{copy.writing.heading}</h1>
+    <p>{copy.writing.intro}</p>
   </header>
 
   {[...byYear.entries()].map(([year, items]) => (
@@ -26,7 +27,7 @@ const external = posts.filter((p) => p.external).length;
   ))}
 
   <p class="elsewhere">
-    {external > 0 && <>Everything marked ↗ opens on <a href={site.links.medium} rel="me external">Medium</a>, where {external === 1 ? 'one piece is' : `${external} pieces are`} published so far.</>}
-    {external === 0 && <>Medium was unreachable at build time, so only local notes are listed.</>}
+    {external > 0 && <Fragment set:html={copy.writing.elsewhere(external, `<a href="${site.links.medium}" rel="me external">${copy.footer.medium}</a>`)} />}
+    {external === 0 && copy.writing.elsewhereEmpty}
   </p>
 </Base>

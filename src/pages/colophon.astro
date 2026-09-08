@@ -1,16 +1,17 @@
 ---
 import Base from '../layouts/Base.astro';
+import { copy } from '../../copy';
+const c = copy.colophon;
 ---
-<Base title="Colophon" description="How this site is built and who it borrows from.">
+<Base title={c.title} description={c.description}>
   <header class="page-head">
-    <h1>How this is built, and who it borrows from.</h1>
+    <h1>{c.heading}</h1>
   </header>
   <article class="prose">
-    <p>Astro, content collections, MDX. Static output, deployed on Vercel. Newsreader for the serif, Instrument Sans for everything else. The only colour on the site is the four domain tags, and each one means something.</p>
-    <h2>The globe</h2>
-    <p>The globe is <a href="https://github.com/shuding/cobe">cobe</a> by Shu Ding. The idea of having a globe at all is borrowed from <a href="https://fabianschultz.com">Fabian Schultz</a>, whose site source is <a href="https://github.com/fabe/site">public</a>.</p>
-    <h2>The drum</h2>
-    <p>The drawing on the home page is a circular membrane. Its vibration splits into modes, each a Bessel function in the radius times a cosine around the rim, and each mode rings at a frequency set by a zero of that Bessel function. Those zeros are not whole-number multiples of each other, so an ideal drumhead's overtones are inharmonic. That is why most drums carry no clear pitch.</p>
-    <p>A tabla does. The black patch in the middle, the syahi, loads the membrane so that its lowest modes are pulled into near-harmonic ratios, and the ear hears a note. C. V. Raman worked this out in the 1920s. Click the drum and every mode is excited in proportion to how far it moves at the point you struck, then each decays at its own rate. Strike the centre and you get the symmetric modes; strike the edge and you get the ones a tabla player actually uses.</p>
+    <p>{c.stack}</p>
+    <h2>{c.globeHeading}</h2>
+    <p>{c.globeBefore}<a href="https://github.com/shuding/cobe">{c.globeCobe}</a>{c.globeMiddle}<a href="https://fabianschultz.com">{c.globeFabian}</a>{c.globeAfter}<a href="https://github.com/fabe/site">{c.globePublic}</a>{c.globeEnd}</p>
+    <h2>{c.drumHeading}</h2>
+    {c.drum.map((para) => <p>{para}</p>)}
   </article>
 </Base>

@@ -1,4 +1,5 @@
 ---
+import { copy } from '../../copy';
 import { getEntry } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import BlockHead from '../components/BlockHead.astro';
@@ -7,21 +8,21 @@ import Entries from '../components/Entries.astro';
 const roles = ((await getEntry('history', 'roles'))?.data.items ?? []).filter((r): r is Extract<typeof r, { title: string }> => 'title' in r);
 const education = ((await getEntry('history', 'education'))?.data.items ?? []).filter((e): e is Extract<typeof e, { degree: string }> => 'degree' in e);
 ---
-<Base title="About" description="How four degrees across biology, data science and information science turned into one job.">
+<Base title={copy.about.title} description={copy.about.description}>
   <header class="page-head">
-    <h1>Molecular biology, then data science, then applied information science and information systems. It reads like four things. It was one.</h1>
-    <p>Placeholder. The owner will write this as a path, not a list.</p>
+    <h1>{copy.about.heading}</h1>
+    <p>{copy.about.intro}</p>
   </header>
 
   <section class="block" id="work">
-    <BlockHead title="Work" />
+    <BlockHead title={copy.about.work} />
     <Entries items={roles.map((r) => ({
       title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
     }))} />
   </section>
 
   <section class="block" id="education">
-    <BlockHead title="Where I studied" />
+    <BlockHead title={copy.about.education} />
     <Entries items={education.map((e) => ({
       title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, start: e.start, end: e.end,
     }))} />
