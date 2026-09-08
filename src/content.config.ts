@@ -50,7 +50,7 @@ const bookItem = z.object({
   title: z.string(),
   author: z.string(),
   finished: z.string().optional(),
-  format: z.enum(['paperback', 'hardcover', 'ebook']).default('paperback'),
+  format: z.enum(['physical', 'ebook', 'audiobook']).default('physical'),
   pages: z.number().optional(),
   isbn: z.string().optional(),
   blurb: z.string().optional(),

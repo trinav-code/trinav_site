@@ -15,13 +15,13 @@ import { site } from '../../site.config';
 
 export interface RawBook {
   title: string; author: string; finished?: string | number;
-  format?: 'paperback' | 'hardcover' | 'ebook'; pages?: number;
+  format?: 'physical' | 'ebook' | 'audiobook'; pages?: number;
   isbn?: string; cover?: string; blurb?: string; thoughts?: string; tags?: string[];
   source?: 'file' | 'goodreads';
 }
 export interface Book extends RawBook {
   finished?: string;
-  format: 'paperback' | 'hardcover' | 'ebook';
+  format: 'physical' | 'ebook' | 'audiobook';
   coverUrl?: string; coverLarge?: string; color?: string;
 }
 
@@ -99,7 +99,7 @@ async function enrich(raw: RawBook, cache: Record<string, Partial<Book>>, log: (
   const base: Book = {
     ...raw,
     finished: raw.finished === undefined ? undefined : String(raw.finished),
-    format: raw.format ?? 'paperback',
+    format: raw.format ?? 'physical',
   };
   const overrides = { ...stripUndefined(raw), finished: base.finished };
   if (cache[key]) return { ...base, ...cache[key], ...overrides };
@@ -184,7 +184,7 @@ async function goodreadsBooks(feedUrl: string, log: (m: string) => void): Promis
     return items.map((it) => {
       const read = text(it.user_read_at);
       const d = read ? new Date(read) : undefined;
-      const finished = d && !isNaN(d.getTime()) ? `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}` : undefined;
+      const finished = d && !isNaN(d.getTime()) ? `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}` : undefined;
       const pages = Number(text(it.num_pages)) || undefined;
       const isbn = text(it.isbn) || undefined;
       const cover = (text(it.book_large_image_url) || undefined)?.replace(/\._S[XY]\d+_(?=\.)/, '');

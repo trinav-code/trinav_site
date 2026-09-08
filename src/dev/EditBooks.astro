@@ -23,7 +23,7 @@ import Base from '../layouts/Base.astro';
       <input name="title" placeholder="Title" />
       <input name="author" placeholder="Author" />
       <input name="finished" placeholder="YYYY-MM" size="7" />
-      <select name="format"><option>paperback</option><option>hardcover</option><option>ebook</option></select>
+      <select name="format"><option>physical</option><option>ebook</option><option>audiobook</option></select>
       <input name="pages" placeholder="pages" size="5" inputmode="numeric" />
       <input name="isbn" placeholder="isbn" size="13" />
       <input name="tags" placeholder="tags, comma" size="10" />
@@ -58,7 +58,7 @@ import Base from '../layouts/Base.astro';
     function row(b: any = {}): HTMLLIElement {
       const li = tpl.content.firstElementChild!.cloneNode(true) as HTMLLIElement;
       const set = (n: string, v: any) => { const el = li.querySelector<HTMLInputElement>(`[name=${n}]`); if (el && v != null) el.value = String(v); };
-      set('title', b.title); set('author', b.author); set('finished', b.finished); set('format', b.format ?? 'paperback');
+      set('title', b.title); set('author', b.author); set('finished', b.finished); set('format', b.format ?? 'physical');
       set('pages', b.pages); set('isbn', b.isbn); set('tags', (b.tags ?? []).join(', ')); set('thoughts', b.thoughts);
       li.querySelector('.ed-del')!.addEventListener('click', () => li.remove());
       li.addEventListener('dragstart', (e) => { dragging = li; li.style.opacity = '.4'; e.dataTransfer!.effectAllowed = 'move'; });
