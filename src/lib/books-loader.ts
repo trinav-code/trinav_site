@@ -28,7 +28,7 @@ export interface Book extends RawBook {
 const CACHE = '.cache/books.json';
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 /** Match key: title before any subtitle colon. */
-const titleKey = (s: string) => norm(s.split(':')[0]);
+const titleKey = (s: string) => norm(s.split(':')[0].replace(/\s*\(.*?\)\s*/g, ' '));
 const UA = { 'user-agent': 'personal-site build (github.com/trinav-code/trinav_site)' };
 
 function stripFences(content: string) {
@@ -190,7 +190,7 @@ async function goodreadsBooks(feedUrl: string, log: (m: string) => void): Promis
       const cover = (text(it.book_large_image_url) || undefined)?.replace(/\._S[XY]\d+_(?=\.)/, '');
       const added = text(it.user_date_added);
       const thoughts = text(it.user_review).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || undefined;
-      return { title: text(it.title).trim(), author: text(it.author_name).trim(), finished, pages, isbn, cover, thoughts, source: 'goodreads' as const,
+      return { title: text(it.title).trim(), author: text(it.author_name).replace(/\s+/g, ' ').trim(), finished, pages, isbn, cover, thoughts, source: 'goodreads' as const,
                _sort: (d && !isNaN(d.getTime()) ? d : new Date(added || 0)).getTime() };
     }).filter((b) => b.title).sort((a, b) => b._sort - a._sort).map(({ _sort, ...b }) => b);
   } catch (e) {
@@ -214,15 +214,18 @@ export function booksLoader(path = 'books.md'): Loader {
       const log = (m: string) => logger.warn(m);
       /* Goodreads is the primary source for cover, ISBN and page count.
          Open Library is only consulted for books Goodreads does not have.
-         Titles, dates, formats and thoughts in books.md always win. */
+         Goodreads' read date wins when it has one; titles, formats and
+         thoughts in books.md always win. */
       const gr = await goodreadsBooks(site.feeds.goodreads, log);
-      const grByTitle = new Map(gr.map((b) => [titleKey(b.title), b]));
+      const grCurrent = await goodreadsBooks(site.feeds.goodreads.replace(/shelf=read\b/, 'shelf=currently-reading'), log);
+      const grByTitle = new Map([...grCurrent, ...gr].map((b) => [titleKey(b.title), b]));
       let matched = 0;
       const withGoodreads = (b: RawBook): RawBook => {
         const g = grByTitle.get(titleKey(b.title));
         if (!g) return b;
         matched++;
-        return { ...b, cover: b.cover ?? g.cover, isbn: b.isbn ?? g.isbn, pages: b.pages ?? g.pages };
+        /* Goodreads' read date is trusted over the one in the file. */
+        return { ...b, cover: b.cover ?? g.cover, isbn: b.isbn ?? g.isbn, pages: b.pages ?? g.pages, finished: g.finished ?? b.finished };
       };
 
       /* Sequential on purpose: Open Library throttles parallel bursts. */
@@ -231,12 +234,20 @@ export function booksLoader(path = 'books.md'): Loader {
       const recent: Book[] = [];
       for (const b of data.recent ?? []) recent.push(await enrich(withGoodreads(b), cache, log));
 
+      /* Currently-reading shelf on Goodreads: add anything the file lacks. */
+      const listedCurrent = new Set(current.map((b) => titleKey(b.title)));
+      for (const b of grCurrent.filter((b) => !listedCurrent.has(titleKey(b.title)))) current.push(await enrich({ ...b, finished: undefined }, cache, log));
+
       /* Then append anything on the read shelf that books.md does not list. */
       const listed = new Set([...current, ...recent].map((b) => titleKey(b.title)));
       const fromGoodreads = gr.filter((b) => !listed.has(titleKey(b.title)));
       for (const b of fromGoodreads) recent.push(await enrich(b, cache, log));
       if (fromGoodreads.length) logger.info(`${fromGoodreads.length} books added from Goodreads.`);
       logger.info(`${matched} of ${(data.current?.length ?? 0) + (data.recent?.length ?? 0)} listed books matched Goodreads.`);
+      /* Shelf order: newest finished first; month beats year-only; undated last. */
+      const rank = (f?: string) => (f ? (f.length === 4 ? `${f}-00` : f) : '0000-00');
+      recent.sort((a, b) => rank(b.finished).localeCompare(rank(a.finished)));
+
       const noCover = [...current, ...recent].filter((b) => !b.coverUrl).map((b) => b.title);
       if (noCover.length) logger.warn(`No cover: ${noCover.join('; ')}`);
 
