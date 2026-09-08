@@ -7,9 +7,9 @@ import Entries from '../components/Entries.astro';
 import ProjectList from '../components/ProjectList.astro';
 import { writingFeed } from '../lib/feed';
 import WritingList from '../components/WritingList.astro';
-import Drum from '../components/Drum.astro';
 import Shelf from '../components/Shelf.astro';
-import { countWord, finishedLabel } from '../lib/format';
+import Cover from '../components/Cover.astro';
+import { finishedLabel } from '../lib/format';
 
 const rolesEntry = await getEntry('history', 'roles');
 const eduEntry = await getEntry('history', 'education');
@@ -27,13 +27,14 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
 <Base>
   <header class="hero">
     <div class="hero-text">
-      {copy.home.hero.map((line, i) => <p class={i === 0 ? 'load' : 'load quiet'}>{line}</p>)}
+      <h1 class="masthead-name">{copy.home.name}</h1>
+      <p class="masthead-role">{copy.home.role}</p>
+      {copy.home.hero.map((line, i) => <p class={i === 0 ? 'lede' : 'quiet'}>{line}</p>)}
     </div>
-    <Drum size={200} label={copy.home.drumLabel} />
   </header>
 
   <section class="block">
-    <BlockHead title={copy.home.work.heading} href="/about#work" link={copy.home.work.link(countWord(roles.length))} />
+    <BlockHead title={copy.home.work.heading} href="/about#work" link={copy.home.work.link} />
     <Entries items={roles.slice(0, 2).map((r) => ({
       title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
     }))} />
@@ -47,7 +48,7 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
   </section>
 
   <section class="block">
-    <BlockHead title={copy.home.projects.heading} href="/work" link={copy.home.projects.link(countWord(allProjects.length))} />
+    <BlockHead title={copy.home.projects.heading} href="/work" link={copy.home.projects.link} />
     <ProjectList projects={featured} />
   </section>
 
@@ -66,8 +67,32 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
       </div>
       <div class="now-listening">
         <h4>{copy.home.currently.listening}</h4>
-        <p>{copy.home.currently.listeningPlaceholder}</p>
+        <div class="now-row listening" id="now-playing" hidden>
+          <span class="cover cover-blank" aria-hidden="true" style="width:34px;height:34px"></span>
+          <div><p class="np-title"></p><span class="np-meta"></span></div>
+        </div>
         <p class="aside">{copy.home.currently.listeningAside}</p>
+        <script is:inline>
+          /* Spotify, via /api/now-playing. Renders nothing at all on failure. */
+          (function () {
+            var el = document.getElementById('now-playing');
+            if (!el) return;
+            fetch('/api/now-playing', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (t) {
+              if (!t || t.state === 'none' || !t.title) return;
+              var img = el.querySelector('.cover');
+              if (t.art) {
+                var i = document.createElement('img');
+                i.className = 'cover'; i.width = 34; i.height = 34; i.alt = ''; i.src = t.art;
+                i.style.cssText = 'width:34px;height:34px';
+                img.replaceWith(i);
+              }
+              el.querySelector('.np-title').textContent = t.title;
+              el.querySelector('.np-meta').textContent = t.artist + (t.state === 'playing' ? ' · now' : ' · last played');
+              if (t.url) { var a = document.createElement('a'); a.href = t.url; a.rel = 'external noopener'; a.className = 'np-link'; el.parentNode.insertBefore(a, el); a.appendChild(el); }
+              el.hidden = false;
+            }).catch(function () {});
+          })();
+        </script>
       </div>
     </div>
 

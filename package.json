@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/mdx": "^8.0.0",
+    "@astrojs/vercel": "^11.0.10",
     "astro": "^7.3.1",
     "fast-xml-parser": "^5.11.1",
     "sharp": "^0.35.4",

@@ -25,7 +25,7 @@ the final copy; treat everything currently in the mockup as placeholder.
 ## Stack
 
 - Astro. Content-first, MDX for writeups and posts, zero JS by default.
-- Islands only for: the drum piece, the bookshelf, the globe. Nothing else ships JS.
+- Islands only for: the bookshelf, the globe. Nothing else ships JS.
 - Public GitHub repo. Deploy on Vercel.
 - All personal details (name, domain, email, GitHub, LinkedIn, Medium) live in one
   `site.config.ts`. Nothing personal hardcoded in components.
@@ -87,23 +87,12 @@ Do not reintroduce these. Each was considered and cut.
 /404             reaction-diffusion piece
 ```
 
-Home page order: hero + drum, Work (roles), Where I studied, Selected projects,
+Home page order: masthead + hero, Work (roles), Where I studied, Selected projects,
 Writing, Currently (reading + listening + globe teaser), footer.
 
 Roles and projects are visually distinct: roles carry employer and a date range,
-projects carry a domain tag and no date. Each section links out with a count so
+projects carry a domain tag and no date. Each section links out so
 three items read as a selection rather than the full inventory.
-
-## The one graphical moment
-
-A vibrating drumhead. Nodal patterns of a circular membrane, monochrome line work,
-slowly cycling modes, cursor changes where the strike lands. Canvas or WebGL.
-
-This is not decoration. The owner has fifteen years of tabla. A plain circular
-drumhead has inharmonic overtones, which is why most drums carry no clear pitch;
-the tabla's syahi loads the membrane so its modes fall into near-harmonic ratios,
-which is why it can carry melody. Raman published on this. That fact goes on the
-colophon page. Keep the drawing restrained enough that it does not fight the type.
 
 ## Features, in build order
 
@@ -152,14 +141,14 @@ colophon page. Keep the drawing restrained enough that it does not fight the typ
 ## Quality floor
 
 Responsive to mobile. Visible keyboard focus. `prefers-reduced-motion` respected
-everywhere including the drum and the shelf. No layout shift. The whole point of
+everywhere including the shelf. No layout shift. The whole point of
 choosing Astro is that this site should be very fast; keep it that way.
 
 ## Attribution
 
 A real colophon, not a formality. Credit `shuding/cobe` for the globe and Fabian
 Schultz (fabianschultz.com, source at github.com/fabe/site) as the inspiration for
-having a globe at all. Explain the drumhead maths. This page is part of the
+having a globe at all. This page is part of the
 argument, not an afterthought.
 
 ## Resolved since this brief was written
@@ -183,5 +172,4 @@ confirm before publishing.
 ## Still open
 
 - Domain. `site.config.ts` has a placeholder.
-- Whether the drum sits beside the hero text or spans full width above it.
 - Which three projects lead on the home page.

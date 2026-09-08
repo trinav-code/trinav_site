@@ -9,7 +9,7 @@ interface Props {
   description?: string;
 }
 const { title, description = site.description } = Astro.props;
-const fullTitle = title ? `${title} — ${site.shortName}` : `${site.shortName} — ${site.role}`;
+const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 <!doctype html>
@@ -23,6 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
   <meta property="og:title" content={fullTitle} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={site.name} />
   <meta property="og:url" content={canonical} />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

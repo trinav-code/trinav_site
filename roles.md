@@ -44,9 +44,8 @@ roles:
       the lab could actually iterate on them.
 
 education:
-  - degree: M.S. Applied Information Science & M.S. Information Systems
+  - degree: Master of Science in Applied Information Science (Technion) & Master of Science in Information Systems (Cornell) with a Concentration in Health Tech
     school: Jacobs Technion–Cornell Institute, Cornell Tech
-    detail: Health Tech concentration
     start: 2026-08
     end: 2028-05
 

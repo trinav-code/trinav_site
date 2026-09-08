@@ -22,16 +22,17 @@ export const copy = {
   },
 
   home: {
+    name: "Trinav Chaudhuri",
+    role: "Applied AI / ML Engineer",
     hero: [
       "I build clinical AI that has to work when there is a real patient on the other end of it.",
       "Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.",
       "I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.",
     ],
-    drumLabel: "A vibrating drumhead. Click to strike it.",
 
     work: {
       heading: "Work",
-      link: (n: string) => `All ${n} roles`,
+      link: "All roles",
     },
     education: {
       heading: "Where I studied",
@@ -39,7 +40,7 @@ export const copy = {
     },
     projects: {
       heading: "Selected projects",
-      link: (n: string) => `All ${n}`,
+      link: "All projects",
     },
     writing: {
       heading: "Writing",
@@ -55,7 +56,6 @@ export const copy = {
       coverAlt: (title: string) => `Cover of ${title}`,
       close: "Close",
       listening: "Listening",
-      listeningPlaceholder: "Live from Spotify",
       listeningAside: "Eighteen years of tabla means I notice the percussion first, every time.",
       globe: "Everywhere I have been so far, on one slowly turning ball.",
       globeLink: "Open the globe",
@@ -122,11 +122,6 @@ export const copy = {
     globeAfter: ", whose site source is ",
     globePublic: "public",
     globeEnd: ".",
-    drumHeading: "The drum",
-    drum: [
-      "The drawing on the home page is a circular membrane. Its vibration splits into modes, each a Bessel function in the radius times a cosine around the rim, and each mode rings at a frequency set by a zero of that Bessel function. Those zeros are not whole-number multiples of each other, so an ideal drumhead's overtones are inharmonic. That is why most drums carry no clear pitch.",
-      "A tabla does. The black patch in the middle, the syahi, loads the membrane so that its lowest modes are pulled into near-harmonic ratios, and the ear hears a note. C. V. Raman worked this out in the 1920s. Click the drum and every mode is excited in proportion to how far it moves at the point you struck, then each decays at its own rate. Strike the centre and you get the symmetric modes; strike the edge and you get the ones a tabla player actually uses.",
-    ],
   },
 
   notFound: {
