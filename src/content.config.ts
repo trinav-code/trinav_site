@@ -27,6 +27,8 @@ const educationItem = z.object({
   degree: z.string(),
   school: z.string(),
   detail: z.string().optional(),
+  /** Rendered once, under this row, to tie a group of rows together. */
+  groupNote: z.string().optional(),
   start: dateish,
   end: dateish.optional(),
 });

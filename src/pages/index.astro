@@ -33,21 +33,21 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
     </div>
   </header>
 
-  <section class="block">
+  <section class="block wide">
     <BlockHead title={copy.home.work.heading} href="/about#work" link={copy.home.work.link} />
     <Entries items={roles.slice(0, 2).map((r) => ({
       title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
     }))} />
   </section>
 
-  <section class="block">
+  <section class="block wide">
     <BlockHead title={copy.home.education.heading} href="/about" link={copy.home.education.link} />
     <Entries items={education.map((e) => ({
-      title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, start: e.start, end: e.end,
+      title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, groupNote: e.groupNote, start: e.start, end: e.end,
     }))} />
   </section>
 
-  <section class="block">
+  <section class="block wide">
     <BlockHead title={copy.home.projects.heading} href="/work" link={copy.home.projects.link} />
     <ProjectList projects={featured} />
   </section>
@@ -57,7 +57,7 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
     <WritingList posts={posts.slice(0, 3)} />
   </section>
 
-  <section class="block">
+  <section class="block wide">
     <BlockHead title={copy.home.currently.heading} />
     <div class="now">
       <div class="now-reading">
@@ -68,7 +68,7 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
       <div class="now-listening">
         <h4>{copy.home.currently.listening}</h4>
         <div class="now-row listening" id="now-playing" hidden>
-          <span class="cover cover-blank" aria-hidden="true" style="width:34px;height:34px"></span>
+          <span class="cover cover-blank" aria-hidden="true" style="width:96px;height:96px"></span>
           <div><p class="np-title"></p><span class="np-meta"></span></div>
         </div>
         <p class="aside">{copy.home.currently.listeningAside}</p>
@@ -82,8 +82,8 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
               var img = el.querySelector('.cover');
               if (t.art) {
                 var i = document.createElement('img');
-                i.className = 'cover'; i.width = 34; i.height = 34; i.alt = ''; i.src = t.art;
-                i.style.cssText = 'width:34px;height:34px';
+                i.className = 'cover cover-color'; i.width = 96; i.height = 96; i.alt = ''; i.src = t.art;
+                i.style.cssText = 'width:96px;height:96px';
                 img.replaceWith(i);
               }
               el.querySelector('.np-title').textContent = t.title;

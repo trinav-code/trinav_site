@@ -14,17 +14,17 @@ const education = ((await getEntry('history', 'education'))?.data.items ?? []).f
     <p>{copy.about.intro}</p>
   </header>
 
-  <section class="block" id="work">
+  <section class="block wide" id="work">
     <BlockHead title={copy.about.work} />
     <Entries items={roles.map((r) => ({
       title: r.title, where: r.org, note: r.note, start: r.start, end: r.end, current: r.current,
     }))} />
   </section>
 
-  <section class="block" id="education">
+  <section class="block wide" id="education">
     <BlockHead title={copy.about.education} />
     <Entries items={education.map((e) => ({
-      title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, start: e.start, end: e.end,
+      title: e.degree, where: e.detail ? `${e.school}. ${e.detail}.` : e.school, groupNote: e.groupNote, start: e.start, end: e.end,
     }))} />
   </section>
 </Base>

@@ -44,13 +44,26 @@ roles:
       the lab could actually iterate on them.
 
 education:
-  - degree: Master of Science in Applied Information Science (Technion) & Master of Science in Information Systems (Cornell) with a Concentration in Health Tech
-    school: Jacobs Technion–Cornell Institute, Cornell Tech
+  # `groupNote` renders one quiet line under the LAST row of a group.
+  - degree: M.S. Applied Information Science
+    school: Technion – Israel Institute of Technology
     start: 2026-08
     end: 2028-05
 
-  - degree: B.A. Data Science & Molecular and Cell Biology
-    school: UC Berkeley
+  - degree: M.S. Information Systems, Concentration in Health Tech
+    school: Cornell University
+    start: 2026-08
+    end: 2028-05
+    groupNote: Taken concurrently as the dual-degree program at the Jacobs Technion–Cornell Institute at Cornell Tech.
+
+  - degree: B.A. Data Science
+    school: University of California, Berkeley
     start: 2022
     end: 2026
+
+  - degree: B.A. Molecular and Cell Biology
+    school: University of California, Berkeley
+    start: 2022
+    end: 2026
+    groupNote: A double major, taken concurrently.
 ---
