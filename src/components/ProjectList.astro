@@ -6,9 +6,12 @@ const { projects } = Astro.props;
 ---
 <ul class="projects">
   {projects.map((p) => (
-    <li>
+    <li data-domain={p.data.domain}>
       <a href={`/work/${p.id}`}>
-        <h3>{p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span></h3>
+        <h3>
+          <span class={`dom-mark ${p.data.domain}`} aria-hidden="true"></span>
+          {p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span>
+        </h3>
         <p>{p.data.summary}</p>
       </a>
     </li>

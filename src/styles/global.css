@@ -63,6 +63,7 @@ h1,h2,h3,h4{margin:0}
 /* ---------------- page heading (inner pages) ---------------- */
 .page-head{padding:80px 0 40px}
 .page-head h1{font-family:var(--serif);font-weight:300;font-size:25px;line-height:1.5;letter-spacing:-.011em;max-width:36ch}
+.page-head h1 .dom-mark{width:11px;height:11px;margin-right:14px;vertical-align:middle;display:inline-block}
 .page-head p{font-family:var(--serif);font-weight:300;font-size:20px;line-height:1.5;color:var(--ink-soft);max-width:46ch;margin:14px 0 0}
 
 /* ---------------- section frame ---------------- */
@@ -102,23 +103,50 @@ h1,h2,h3,h4{margin:0}
 .projects li{border-bottom:1px solid var(--rule)}
 .projects li:last-child{border-bottom:0}
 .projects a{
-  display:block;padding:21px 0;text-decoration:none;
-  transition:padding-left .22s cubic-bezier(.22,.61,.36,1);
+  display:block;padding:21px 12px;margin:0 -12px;text-decoration:none;border-radius:3px;
+  transition:padding-left .22s cubic-bezier(.22,.61,.36,1),background-color .22s ease;
 }
-.projects a:hover,.projects a:focus-visible{padding-left:9px}
-.projects h3{font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:-.006em}
-.projects p{margin:6px 0 0;color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:50ch}
-.tag{display:inline-block;margin-left:11px;font-size:12.5px;font-weight:500;vertical-align:2px}
+.projects a:hover,.projects a:focus-visible{padding-left:21px}
+.projects h3{font-family:var(--serif);font-weight:400;font-size:20px;letter-spacing:-.006em;display:flex;align-items:baseline}
+.projects p{margin:6px 0 0 21px;color:var(--ink-soft);font-size:15px;line-height:1.55;max-width:50ch}
+.tag{display:inline-block;margin-left:11px;font-size:12.5px;font-weight:500;vertical-align:2px;font-family:var(--sans)}
+
+/* Domain colour. These four classes are the only colour on the site and
+   only ever sit on a domain: the mark, the tag, the row tint, the chip. */
 .health{color:var(--d-health)}
 .compliance{color:var(--d-compliance)}
 .sport{color:var(--d-sport)}
 .data{color:var(--d-data)}
 
+.dom-mark{
+  flex:none;display:inline-block;width:9px;height:9px;margin-right:12px;
+  background:currentColor;align-self:center;
+}
+.projects li[data-domain=health] a:hover,.projects li[data-domain=health] a:focus-visible{background:color-mix(in srgb,var(--d-health) 8%,transparent)}
+.projects li[data-domain=compliance] a:hover,.projects li[data-domain=compliance] a:focus-visible{background:color-mix(in srgb,var(--d-compliance) 8%,transparent)}
+.projects li[data-domain=sport] a:hover,.projects li[data-domain=sport] a:focus-visible{background:color-mix(in srgb,var(--d-sport) 8%,transparent)}
+.projects li[data-domain=data] a:hover,.projects li[data-domain=data] a:focus-visible{background:color-mix(in srgb,var(--d-data) 8%,transparent)}
+
 /* ---------------- domain filter (/work) ---------------- */
-.filters{display:flex;flex-wrap:wrap;gap:18px;list-style:none;margin:0 0 6px;padding:0;font-size:14px}
-.filters a{text-decoration:none;color:var(--ink-soft);padding-bottom:2px;border-bottom:1px solid transparent}
-.filters a:hover,.filters a:focus-visible{color:var(--ink);border-bottom-color:var(--ink)}
-.filters a[aria-current]{color:var(--ink);border-bottom-color:var(--ink)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;list-style:none;margin:0 0 10px;padding:0;font-size:13px;font-weight:500}
+.filters a{
+  display:inline-block;text-decoration:none;padding:4px 11px;border-radius:2px;
+  color:var(--paper);background:var(--ink-faint);transition:background-color .18s ease;
+}
+.filters a.health{background:color-mix(in srgb,var(--d-health) 55%,var(--paper))}
+.filters a.compliance{background:color-mix(in srgb,var(--d-compliance) 55%,var(--paper))}
+.filters a.sport{background:color-mix(in srgb,var(--d-sport) 55%,var(--paper))}
+.filters a.data{background:color-mix(in srgb,var(--d-data) 55%,var(--paper))}
+.filters a[aria-current]{background:var(--ink)}
+.filters a.health[aria-current]{background:var(--d-health)}
+.filters a.compliance[aria-current]{background:var(--d-compliance)}
+.filters a.sport[aria-current]{background:var(--d-sport)}
+.filters a.data[aria-current]{background:var(--d-data)}
+.filters a:hover,.filters a:focus-visible{filter:none}
+.filters a.health:hover{background:var(--d-health)}
+.filters a.compliance:hover{background:var(--d-compliance)}
+.filters a.sport:hover{background:var(--d-sport)}
+.filters a.data:hover{background:var(--d-data)}
 
 /* ---------------- writing ---------------- */
 .writing{list-style:none;margin:0;padding:0}
@@ -147,9 +175,17 @@ h1,h2,h3,h4{margin:0}
 .now{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;padding-top:20px}
 .now h4{font-size:14px;font-weight:500;color:var(--ink-faint);margin-bottom:10px}
 .now p{margin:0;font-size:15.5px}
-.shelf{list-style:none;margin:10px 0 0;padding:0}
-.shelf li{font-size:14.5px;color:var(--ink-soft);padding:3px 0}
+.now-list{list-style:none;margin:0;padding:0}
+.now-row{display:flex;gap:12px;align-items:center;padding:6px 0}
+.now-row p{font-size:15.5px;line-height:1.35}
+.now-row span{font-size:13.5px;color:var(--ink-soft)}
+.cover{flex:none;display:block;border-radius:1px;object-fit:cover;filter:grayscale(1) contrast(1.05);background:var(--rule)}
+.cover-blank{
+  background:repeating-linear-gradient(to bottom,var(--paper) 0 5px,var(--rule) 5px 6px);
+  border:1px solid var(--rule);
+}
 .aside{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:15px;margin-top:9px}
+.aside a{color:var(--ink);text-underline-offset:3px}
 
 .globe-line{
   display:flex;align-items:center;gap:16px;
@@ -181,6 +217,64 @@ h1,h2,h3,h4{margin:0}
 .meta{display:flex;flex-wrap:wrap;gap:22px;font-size:14px;color:var(--ink-soft);margin:0 0 40px;padding-bottom:20px;border-bottom:1px solid var(--rule)}
 .meta a{text-decoration:none}
 .meta a:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------------- /reading shelf ---------------- */
+.shelf{
+  list-style:none;margin:0;padding:0 8px;
+  display:flex;align-items:flex-end;gap:9px;min-height:170px;
+  perspective:900px;
+}
+.spine-slot{position:relative;display:flex;align-items:flex-end;height:var(--h);transform-origin:bottom center}
+.spine-slot.lean-l,.spine-slot.lean-r{transform-origin:bottom left;transform:rotate(8deg);margin-right:calc(var(--h) * .12)}
+.spine{
+  display:block;width:var(--w);height:var(--h);padding:0;border:0;cursor:pointer;
+  background:var(--ink);border-radius:1px 1px 0 0;position:relative;
+  transform-origin:bottom center;
+  transition:transform .55s cubic-bezier(.22,.61,.36,1),background-color .2s ease;
+}
+.spine::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:9px;
+  background:var(--band,transparent);
+}
+.spine:hover,.spine:focus-visible{background:var(--ink-soft)}
+.spine.pulled{transform:translateY(-16px) rotateY(-58deg) scale(1.08);background:var(--ink-soft)}
+.spine-title{
+  position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;
+}
+.shelf-board{height:1px;background:var(--ink);margin:0 -8px 0 0;opacity:.85}
+
+.book-panel{
+  border:1px solid var(--rule);background:var(--paper);color:var(--ink);
+  padding:0;margin:auto;max-width:560px;width:calc(100% - 56px);border-radius:3px;
+}
+.book-panel::backdrop{background:rgba(251,250,247,.72)}
+.book-panel-inner{display:grid;grid-template-columns:150px 1fr;gap:26px;padding:26px}
+.book-cover{width:150px;height:auto;display:block;border-radius:2px;box-shadow:none}
+.book-cover-blank{
+  width:150px;height:225px;border:1px solid var(--rule);
+  background:repeating-linear-gradient(to bottom,var(--paper) 0 9px,var(--rule) 9px 10px);
+}
+.book-meta h2{font-family:var(--serif);font-weight:400;font-size:21px;letter-spacing:-.006em}
+.book-author{margin:4px 0 14px;font-size:14px;color:var(--ink-soft)}
+.book-blurb{margin:0 0 12px;font-size:15px;line-height:1.55;color:var(--ink)}
+.book-thoughts{margin:0 0 12px;font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.5;color:var(--ink-soft)}
+.book-close{font:inherit;font-size:14px;color:var(--ink-soft);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.book-close:hover{color:var(--ink)}
+
+.shelf-list{list-style:none;margin:0;padding:0;counter-reset:none}
+.shelf-list li{display:grid;grid-template-columns:1fr auto;gap:2px 24px;padding:14px 0;border-bottom:1px solid var(--rule)}
+.shelf-list li:last-child{border-bottom:0}
+.sl-title{font-family:var(--serif);font-size:18px}
+.sl-author{grid-column:1;font-size:14px;color:var(--ink-soft)}
+.sl-when{grid-column:2;grid-row:1;font-size:14px;color:var(--ink-faint);white-space:nowrap}
+
+@media (max-width:600px){
+  .book-panel-inner{grid-template-columns:1fr;gap:18px}
+  .book-cover,.book-cover-blank{width:120px;height:auto}
+}
+@media (prefers-reduced-motion:reduce){
+  .spine.pulled{transform:none}
+}
 
 footer{border-top:1px solid var(--rule);padding:24px 0 56px;font-size:14px;color:var(--ink-soft)}
 footer ul{display:flex;flex-wrap:wrap;gap:22px;list-style:none;margin:0;padding:0}

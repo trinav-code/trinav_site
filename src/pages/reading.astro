@@ -1,0 +1,76 @@
+---
+import { getEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { when } from '../lib/format';
+
+const books = (await getEntry('books', 'shelf'))?.data.items ?? [];
+const currentCount = (await getEntry('books', 'current'))?.data.items.length ?? 0;
+
+/* Spine geometry, all from data. Thickness from pages, height from format
+   (three bands, not a continuous map), lean from index so it is stable. */
+const HEIGHT = { paperback: 118, hardcover: 146, ebook: 98 } as const;
+const thickness = (pages?: number) => Math.round(Math.min(22, Math.max(7, (pages ?? 240) / 24)));
+const leaners = books.map((_, i) => i).filter((i) => i % 4 === 2 && i < books.length - 1).slice(0, 2);
+---
+<Base title="Reading" description="What I'm reading and what I finished lately.">
+  <header class="page-head">
+    <h1>The shelf. One book at a time, a few a month, no ratings.</h1>
+    <p>Spine thickness is the page count, height is the format, and the sliver of colour at the base is sampled from the real cover. Click one.</p>
+  </header>
+
+  <section class="block">
+    <ul class="shelf" aria-label="Bookshelf">
+      {books.map((b, i) => {
+        const w = thickness(b.pages);
+        const h = HEIGHT[b.format];
+        const lean = leaners.includes(i) ? (i % 2 ? 'lean-r' : 'lean-l') : '';
+        return (
+          <li class={`spine-slot ${lean}`} style={`--w:${w}px;--h:${h}px${b.color ? `;--band:${b.color}` : ''}`}>
+            <button type="button" class="spine" popovertarget={`book-${i}`} aria-label={`${b.title}, ${b.author}`} data-spine={i}>
+              <span class="spine-title">{b.title}</span>
+            </button>
+            <div popover id={`book-${i}`} class="book-panel" data-panel={i}>
+              <div class="book-panel-inner">
+                {b.coverLarge
+                  ? <img class="book-cover" src={b.coverLarge} alt={`Cover of ${b.title}`} loading="lazy" />
+                  : <div class="book-cover book-cover-blank" aria-hidden="true"></div>}
+                <div class="book-meta">
+                  <h2>{b.title}</h2>
+                  <p class="book-author">{b.author}{b.finished ? ` · finished ${when(b.finished)}` : i < currentCount ? ' · reading now' : ''}</p>
+                  {b.blurb && <p class="book-blurb">{b.blurb}</p>}
+                  {b.thoughts && <p class="book-thoughts">{b.thoughts}</p>}
+                  <button type="button" class="book-close" popovertarget={`book-${i}`} popovertargetaction="hide">Close</button>
+                </div>
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+    <div class="shelf-board" aria-hidden="true"></div>
+  </section>
+
+  <section class="block">
+    <div class="block-head"><h2>As a list</h2></div>
+    <ol class="shelf-list">
+      {books.map((b, i) => (
+        <li>
+          <span class="sl-title">{b.title}</span>
+          <span class="sl-author">{b.author}</span>
+          <span class="sl-when">{b.finished ? when(b.finished) : i < currentCount ? 'now' : ''}</span>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <script>
+    /* Pull the spine forward while its panel is open. The panel itself is
+       native popover, so opening and closing work without this script. */
+    document.querySelectorAll<HTMLElement>('.book-panel').forEach((panel) => {
+      const spine = document.querySelector<HTMLElement>(`.spine[data-spine="${panel.dataset.panel}"]`);
+      panel.addEventListener('toggle', (e) => {
+        spine?.classList.toggle('pulled', (e as ToggleEvent).newState === 'open');
+      });
+    });
+  </script>
+</Base>

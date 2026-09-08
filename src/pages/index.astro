@@ -7,6 +7,7 @@ import ProjectList from '../components/ProjectList.astro';
 import { writingFeed } from '../lib/feed';
 import WritingList from '../components/WritingList.astro';
 import Drum from '../components/Drum.astro';
+import Cover from '../components/Cover.astro';
 import { countWord, finishedLabel } from '../lib/format';
 
 const rolesEntry = await getEntry('history', 'roles');
@@ -61,11 +62,21 @@ const recent = ((await getEntry('books', 'recent'))?.data.items ?? []).slice(0, 
     <div class="now">
       <div>
         <h4>Reading</h4>
-        {current[0] && <p>{current[0].title} &mdash; {current[0].author}</p>}
-        <ul class="shelf">
-          {recent.map((b) => <li>{finishedLabel(b.finished)}: {b.title}</li>)}
+        <ul class="now-list">
+          {current[0] && (
+            <li class="now-row">
+              <Cover src={current[0].coverUrl} alt="" />
+              <div><p>{current[0].title}</p><span>{current[0].author}</span></div>
+            </li>
+          )}
+          {recent.map((b) => (
+            <li class="now-row">
+              <Cover src={b.coverUrl} alt="" />
+              <div><p>{b.title}</p><span>{b.author} · {finishedLabel(b.finished).toLowerCase()}</span></div>
+            </li>
+          ))}
         </ul>
-        <p class="aside">Pulled from my notes, so it stays honest about the ones I abandoned.</p>
+        <p class="aside">Pulled from my notes, so it stays honest about the ones I abandoned. <a href="/reading">The shelf</a></p>
       </div>
       <div>
         <h4>Listening</h4>

@@ -13,7 +13,7 @@ const host = (u: string) => new URL(u).host;
 ---
 <Base title={p.data.title} description={p.data.summary}>
   <header class="page-head">
-    <h1>{p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span></h1>
+    <h1><span class={`dom-mark ${p.data.domain}`} aria-hidden="true"></span>{p.data.title}<span class={`tag ${p.data.domain}`}>{domains[p.data.domain].label}</span></h1>
     <p>{p.data.summary}</p>
   </header>
   <div class="meta">

@@ -3,6 +3,7 @@ import { glob, file } from 'astro/loaders';
 import YAML from 'yaml';
 import { domains, site } from '../site.config';
 import { mediumLoader } from './lib/medium-loader';
+import { booksLoader } from './lib/books-loader';
 
 /** roles.md and books.md are YAML wrapped in `---` fences so they read as
  *  Obsidian frontmatter. Strip the fences and parse the body. */
@@ -48,21 +49,20 @@ const history = defineCollection({
 const bookItem = z.object({
   title: z.string(),
   author: z.string(),
-  finished: dateish.optional(),
+  finished: z.string().optional(),
+  format: z.enum(['paperback', 'hardcover', 'ebook']).default('paperback'),
   pages: z.number().optional(),
+  isbn: z.string().optional(),
+  blurb: z.string().optional(),
   thoughts: z.string().optional(),
+  coverUrl: z.string().optional(),
+  coverLarge: z.string().optional(),
+  /** Dominant cover colour, sampled at build. Absent when there is no cover. */
+  color: z.string().regex(/^#[0-9a-f]{6}$/i).optional(),
 });
 
 const books = defineCollection({
-  loader: file('books.md', {
-    parser: (content) => {
-      const data = frontmatterYaml(content);
-      return {
-        current: { items: data.current ?? [] },
-        recent: { items: data.recent ?? [] },
-      };
-    },
-  }),
+  loader: booksLoader('books.md'),
   schema: z.object({ items: z.array(bookItem) }),
 });
 

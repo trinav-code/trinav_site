@@ -1,0 +1,9 @@
+---
+/* A small monochrome image tile with an honest fallback. `src` is optional;
+   without one it renders a ruled block the same size, never a broken image. */
+interface Props { src?: string; alt?: string; width?: number; height?: number; class?: string }
+const { src, alt = '', width = 34, height = 50, class: cls = '' } = Astro.props;
+---
+{src
+  ? <img class={`cover ${cls}`} src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" style={`width:${width}px;height:${height}px`} />
+  : <span class={`cover cover-blank ${cls}`} aria-hidden="true" style={`width:${width}px;height:${height}px`}></span>}
