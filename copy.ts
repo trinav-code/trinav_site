@@ -49,7 +49,11 @@ export const copy = {
       heading: "Currently",
       reading: "Reading",
       readingAside: "Pulled from my notes, so it stays honest about the ones I abandoned.",
-      shelfLink: "The shelf",
+      shelfLabel: "Bookshelf",
+      readingNow: "reading now",
+      finished: (when: string) => `finished ${when}`,
+      coverAlt: (title: string) => `Cover of ${title}`,
+      close: "Close",
       listening: "Listening",
       listeningPlaceholder: "Live from Spotify",
       listeningAside: "Eighteen years of tabla means I notice the percussion first, every time.",
@@ -94,21 +98,6 @@ export const copy = {
     intro: "Placeholder. The owner will write this as a path, not a list.",
     work: "Work",
     education: "Where I studied",
-  },
-
-  reading: {
-    title: "Reading",
-    description: "What I'm reading and what I finished lately.",
-    heading: "The shelf. One book at a time, a few a month, no ratings.",
-    intro:
-      "Spine thickness is the page count, height is the format, and the sliver of colour at the base is sampled from the real cover. Click one.",
-    shelfLabel: "Bookshelf",
-    readingNow: "reading now",
-    finished: (when: string) => `finished ${when}`,
-    coverAlt: (title: string) => `Cover of ${title}`,
-    close: "Close",
-    listHeading: "As a list",
-    listNow: "now",
   },
 
   globe: {

@@ -220,15 +220,16 @@ h1,h2,h3,h4{margin:0}
 
 /* ---------------- /reading shelf ---------------- */
 .shelf{
-  list-style:none;margin:0;padding:0 8px;
-  display:flex;align-items:flex-end;gap:9px;min-height:170px;
+  list-style:none;margin:6px 0 0;padding:0 4px;
+  display:flex;align-items:flex-end;gap:0;
   perspective:900px;
 }
 .spine-slot{position:relative;display:flex;align-items:flex-end;height:var(--h);transform-origin:bottom center}
-.spine-slot.lean-l,.spine-slot.lean-r{transform-origin:bottom left;transform:rotate(8deg);margin-right:calc(var(--h) * .12)}
+.spine-slot.lean{transform-origin:bottom left;transform:rotate(8deg);margin-right:calc(var(--h) * .13)}
 .spine{
   display:block;width:var(--w);height:var(--h);padding:0;border:0;cursor:pointer;
-  background:var(--ink);border-radius:1px 1px 0 0;position:relative;
+  background:var(--ink);border-radius:1px 1px 0 0;position:relative;overflow:hidden;
+  box-shadow:inset -1px 0 0 var(--paper);
   transform-origin:bottom center;
   transition:transform .55s cubic-bezier(.22,.61,.36,1),background-color .2s ease;
 }
@@ -239,9 +240,12 @@ h1,h2,h3,h4{margin:0}
 .spine:hover,.spine:focus-visible{background:var(--ink-soft)}
 .spine.pulled{transform:translateY(-16px) rotateY(-58deg) scale(1.08);background:var(--ink-soft)}
 .spine-title{
-  position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;
+  position:absolute;top:7px;left:50%;transform:translateX(-50%);
+  writing-mode:vertical-rl;font-family:var(--sans);font-size:9.5px;font-weight:500;letter-spacing:.02em;
+  color:var(--paper);white-space:nowrap;max-height:calc(var(--h) - 22px);overflow:hidden;text-overflow:ellipsis;
+  pointer-events:none;
 }
-.shelf-board{height:1px;background:var(--ink);margin:0 -8px 0 0;opacity:.85}
+.shelf-board{height:1px;background:var(--ink);opacity:.85}
 
 .book-panel{
   border:1px solid var(--rule);background:var(--paper);color:var(--ink);
@@ -254,19 +258,12 @@ h1,h2,h3,h4{margin:0}
   width:150px;height:225px;border:1px solid var(--rule);
   background:repeating-linear-gradient(to bottom,var(--paper) 0 9px,var(--rule) 9px 10px);
 }
-.book-meta h2{font-family:var(--serif);font-weight:400;font-size:21px;letter-spacing:-.006em}
+.book-meta h3{font-family:var(--serif);font-weight:400;font-size:21px;letter-spacing:-.006em}
 .book-author{margin:4px 0 14px;font-size:14px;color:var(--ink-soft)}
 .book-blurb{margin:0 0 12px;font-size:15px;line-height:1.55;color:var(--ink)}
 .book-thoughts{margin:0 0 12px;font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.5;color:var(--ink-soft)}
 .book-close{font:inherit;font-size:14px;color:var(--ink-soft);background:none;border:0;padding:0;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .book-close:hover{color:var(--ink)}
-
-.shelf-list{list-style:none;margin:0;padding:0;counter-reset:none}
-.shelf-list li{display:grid;grid-template-columns:1fr auto;gap:2px 24px;padding:14px 0;border-bottom:1px solid var(--rule)}
-.shelf-list li:last-child{border-bottom:0}
-.sl-title{font-family:var(--serif);font-size:18px}
-.sl-author{grid-column:1;font-size:14px;color:var(--ink-soft)}
-.sl-when{grid-column:2;grid-row:1;font-size:14px;color:var(--ink-faint);white-space:nowrap}
 
 @media (max-width:600px){
   .book-panel-inner{grid-template-columns:1fr;gap:18px}

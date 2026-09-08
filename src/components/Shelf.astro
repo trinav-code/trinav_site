@@ -1,0 +1,58 @@
+---
+/* The bookshelf, edge-on. Each spine is a real button whose width is the
+   page count, height the format band, and base tint the colour sampled from
+   the real cover at build. Lean is chosen by index so it never changes
+   between visits. Click pulls the spine out and opens a native popover. */
+import type { CollectionEntry } from 'astro:content';
+import { when } from '../lib/format';
+import { copy } from '../../copy';
+
+type Book = CollectionEntry<'books'>['data']['items'][number];
+interface Props { books: Book[]; currentCount: number; scale?: number }
+const { books, currentCount, scale = 1 } = Astro.props;
+
+const HEIGHT = { paperback: 118, hardcover: 146, ebook: 98 } as const;
+const thickness = (pages?: number) => Math.round(Math.min(22, Math.max(13, (pages ?? 240) / 22)) * scale);
+const leaners = books.map((_, i) => i).filter((i) => i % 4 === 2 && i < books.length - 1).slice(0, 2);
+const c = copy.home.currently;
+---
+<ul class="shelf" aria-label={c.shelfLabel}>
+  {books.map((b, i) => {
+    const w = thickness(b.pages);
+    const h = Math.round(HEIGHT[b.format] * scale);
+    const lean = leaners.includes(i) ? 'lean' : '';
+    const whenText = b.finished ? c.finished(when(b.finished)) : i < currentCount ? c.readingNow : '';
+    return (
+      <li class={`spine-slot ${lean}`} style={`--w:${w}px;--h:${h}px${b.color ? `;--band:${b.color}` : ''}`}>
+        <button type="button" class="spine" popovertarget={`book-${i}`} aria-label={`${b.title}, ${b.author}`} data-spine={i}>
+          <span class="spine-title" aria-hidden="true">{b.title}</span>
+        </button>
+        <div popover id={`book-${i}`} class="book-panel" data-panel={i}>
+          <div class="book-panel-inner">
+            {b.coverLarge
+              ? <img class="book-cover" src={b.coverLarge} alt={c.coverAlt(b.title)} loading="lazy" />
+              : <div class="book-cover book-cover-blank" aria-hidden="true"></div>}
+            <div class="book-meta">
+              <h3>{b.title}</h3>
+              <p class="book-author">{b.author}{whenText && ` · ${whenText}`}</p>
+              {b.thoughts && <p class="book-thoughts">{b.thoughts}</p>}
+              <button type="button" class="book-close" popovertarget={`book-${i}`} popovertargetaction="hide">{c.close}</button>
+            </div>
+          </div>
+        </div>
+      </li>
+    );
+  })}
+</ul>
+<div class="shelf-board" aria-hidden="true"></div>
+
+<script>
+  /* Pull the spine forward while its panel is open. The panel itself is
+     native popover, so opening and closing work without this script. */
+  document.querySelectorAll<HTMLElement>('.book-panel').forEach((panel) => {
+    const spine = document.querySelector<HTMLElement>(`.spine[data-spine="${panel.dataset.panel}"]`);
+    panel.addEventListener('toggle', (e) => {
+      spine?.classList.toggle('pulled', (e as ToggleEvent).newState === 'open');
+    });
+  });
+</script>
