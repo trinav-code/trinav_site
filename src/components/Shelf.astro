@@ -6,6 +6,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { when } from '../lib/format';
 import { copy } from '../../copy';
+import { spineColor, spineText } from '../lib/color';
 
 type Book = CollectionEntry<'books'>['data']['items'][number];
 interface Props { books: Book[]; currentCount: number; scale?: number }
@@ -16,6 +17,15 @@ const thickness = (pages?: number) => Math.round(Math.min(22, Math.max(16, (page
 /* Exactly one book leans, chosen by index so it is stable across reloads. */
 const leaner = books.length > 3 ? Math.min(books.length - 2, Math.max(2, Math.floor(books.length / 3))) : -1;
 const FACE_W = 0.66;
+const LEAN_DEG = 4, FACE_DEG = 3;
+const heightOf = (b: Book) => Math.round(HEIGHT[b.format] * scale);
+/* A leaning book touches its right neighbour at the neighbour's top edge:
+   horizontal reach at that height = min(h, hNext) * sin(angle). */
+const restGap = (i: number, deg: number) => {
+  const next = books[i + 1];
+  const h = Math.min(heightOf(books[i]), next ? heightOf(next) : heightOf(books[i]));
+  return Math.max(0, Math.round(h * Math.sin((deg * Math.PI) / 180)) - 1);
+};
 const c = copy.home.currently;
 ---
 <div class="shelf-wrap">
@@ -26,8 +36,11 @@ const c = copy.home.currently;
     const lean = i === leaner ? 'lean' : '';
     const face = i === 0 && currentCount > 0;
     const whenText = b.finished ? c.finished(when(b.finished)) : i < currentCount ? c.readingNow : '';
+    const bg = spineColor(b.color);
+    const fg = spineText(bg).color;
+    const gap = face ? restGap(i, FACE_DEG) : lean ? restGap(i, LEAN_DEG) : 0;
     return (
-      <li class={`spine-slot ${lean} ${face ? 'face-slot' : ''}`} style={`--w:${face ? Math.round(h * FACE_W) : w}px;--h:${h}px${b.color ? `;--band:${b.color}` : ''}`}>
+      <li class={`spine-slot ${lean} ${face ? 'face-slot' : ''}`} style={`--w:${face ? Math.round(h * FACE_W) : w}px;--h:${h}px;--spine:${bg};--spine-text:${fg};--gap:${gap}px`}>
         <button type="button" class={face ? 'spine face' : 'spine'} popovertarget={`book-${i}`} aria-label={`${b.title}, ${b.author}`} data-spine={i}>
           {face && b.coverUrl
             ? <img class="face-cover" src={b.coverUrl} alt="" width={Math.round(h * FACE_W)} height={h} />
