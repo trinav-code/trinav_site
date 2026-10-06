@@ -8,6 +8,49 @@ featured: 2
 order: 20
 ---
 
-Placeholder writeup. Automated compliance remediation over hospital codebases:
-static analysis for what can be proven, a model for what can only be argued,
-and an auto-fix path for the violations that are mechanical.
+Regulations change. Codebases do not notice.
+
+RegWatch is four agents in a pipeline. One scrapes regulatory text, one analyses
+a codebase against it, one scores the blast radius of each finding, one writes
+the fix. The output is a pull request, not a report.
+
+## The split that matters
+
+Some compliance violations are provable. Unencrypted patient data at rest is
+either there or it is not, and you can walk the syntax tree and know. Others are
+arguable: whether an audit log captures enough context to satisfy an auditor is a
+judgement call, and no static rule settles it.
+
+So the checkers are AST visitors — `ast.NodeVisitor` subclasses for encryption,
+access control and audit logging. Not regex, which would drown in false positives
+on a real codebase, and not a model, which cannot be held to a consistent
+standard across runs. If a violation can be proven, it gets proven. The language
+model only touches the part that was always going to be an argument, and it never
+decides on its own whether something counts as a violation.
+
+That split is the design. Everything else follows from it.
+
+## Regenerable, not just written
+
+The system is built prompt-first: twelve modules, each generated from a versioned
+prompt. The prompt is the source, the Python is the artifact.
+
+The test of whether that actually holds came when a regulation changed. The
+prompts were updated, the modules regenerated, and the suite went from 47 checks
+to 51 — four new checks accumulating on top of the existing coverage, rather than
+51 replacing 47. That distinction is the difference between regeneration and
+quietly losing coverage every time you rebuild, and it is the thing worth testing
+about prompt-driven development.
+
+## Numbers
+
+Three mock hospital codebases, deliberately written to score differently: 20, 67
+and 95. Across them, 60% of detected HIPAA violations received an auto-generated
+fix that held. Scope covers HIPAA, SOC 2, GDPR and FDA 21 CFR Part 11.
+
+## Credit
+
+Built with Abhinav Balla over a hackathon weekend, at the Prompt Driven
+Development hackathon with Toolhouse and 500 Global. It took Grand Prize and a
+pitch session with 500 Global. 34 of the 37 commits are mine; the repo lives in
+Abhinav's org.

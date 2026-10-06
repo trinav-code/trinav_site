@@ -10,7 +10,7 @@ export const site = {
   shortName: "Trinav",
 
   /** Used in <title>, OG cards and the resume redirect. No trailing slash. */
-  url: "https://REPLACE-ME.com",
+  url: "https://trinav.dev",
 
   /** One line. Used in meta description and OG cards, not printed on the page. */
   role: "Applied AI / ML Engineer",
@@ -29,7 +29,7 @@ export const site = {
 
   links: {
     github: "https://github.com/trinav-code",
-    linkedin: "https://www.linkedin.com/in/trinav-chaudhuri-16a1921a9/",
+    linkedin: "https://www.linkedin.com/in/trinavch/",
     medium: "https://medium.com/@trinav.chaudhuri",
   },
 

@@ -9,9 +9,61 @@ featured: 1
 order: 10
 ---
 
-Placeholder writeup. Pick a team, see every scenario that still gets it through,
-including the third-place cut line. The interesting engineering is in what it
-does when its sources disagree, and in the forced-mismatch drill that surfaced a
-timezone date-bucketing bug before it could publish a wrong score.
+Pick a team, see every remaining scenario that still gets it through.
 
-Data was frozen on 2026-07-19 when the upstream source was retired.
+The 2026 format makes that harder than it sounds. Forty-eight teams, twelve
+groups, and the knockout round takes the top two from each group plus the eight
+best third-placed teams. That last clause is the whole problem: whether a
+third-place finish qualifies depends on results in groups your team never plays
+in.
+
+FIFA publishes the mapping as a table, with one row for every combination of
+which groups the eight qualifying thirds come from. I did not want to transcribe
+it by hand, so the tests extract it mechanically from the regulations: 495
+table-driven cases, one per combination, plus an assertion that there are exactly
+495 with no gaps and no duplicates. If the published table and my parser disagree
+about the shape of the space, the suite fails before it checks a single result.
+
+That is the whole test strategy. The specification already exists, so generate
+the tests from it rather than from my understanding of it.
+
+## Two sources that have to agree
+
+Published results are immutable. Once a score is written, nothing overwrites it.
+
+Getting there meant not trusting a single feed. The fetcher pulls from two
+independent sources and compares them. If they agree, the result publishes. If
+they disagree, nothing publishes and the pipeline opens an issue instead. A
+tracker that silently shows a wrong score is worse than one that admits it does
+not know.
+
+## The drill
+
+I did not want to find out whether that worked during a match, so I forced it:
+fed the live pipeline deliberately conflicting data and watched what it did.
+
+It caught the disagreement. It also surfaced a bug I was not looking for — a
+timezone date-bucketing error putting about a third of records on the wrong
+matchday. That one would have stayed invisible under normal operation, because
+both sources were wrong in the same direction and therefore agreed.
+
+The drill was worth more than the feature it was testing.
+
+## Checking the maths
+
+The scenario engine enumerates outcomes combinatorially. That is fast and exact,
+and it is also exactly the kind of code that can be confidently wrong.
+
+So I wrote a second implementation with nothing in common with the first: a Monte
+Carlo simulation, 100,000 runs, no shared code path. The two agree to within
+about one sigma. A misunderstanding of the qualification rules would not
+reproduce itself identically in a random sampler and a combinatorial enumerator,
+so agreement between them is worth more than either one passing its own tests.
+
+## Status
+
+561 tests, written before the code, running in CI on every push.
+
+Live, with data frozen on 2026-07-19 when the upstream source was retired. The
+site says so on the page — quietly serving stale numbers is the precise failure
+mode this whole design exists to avoid.
