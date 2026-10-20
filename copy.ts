@@ -25,9 +25,9 @@ export const copy = {
     name: "Trinav Chaudhuri",
     role: "Applied AI / ML Engineer",
     hero: [
-      "I build clinical AI that has to work when there is a real patient on the other end of it.",
-      "Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is useful or just fluent. I care a lot about the difference.",
-      "I started in a wet lab and ended up here, which felt like a detour for about three years and then suddenly did not.",
+      "I bulid AI that works when there is a consequence to being wrong.",
+      "I care about the little things. Pipelines, retrieval, evals, the research that decides whether a model is useful or just fluent. Unglamorous, but where most of my time is spent.",
+      "I started uni as a pre-med, but couldn't stay away from tech. Now, I'm working towards combining my experience from both fields to build health AI..",
     ],
 
     work: {
@@ -36,7 +36,7 @@ export const copy = {
     },
     education: {
       heading: "Where I studied",
-      link: "How this happened",
+      link: "My Path",
     },
     projects: {
       heading: "Selected projects",
@@ -49,14 +49,14 @@ export const copy = {
     currently: {
       heading: "Currently",
       reading: "Reading",
-      readingAside: "Pulled from my notes, so it stays honest about the ones I abandoned.",
+      readingAside: "A mix of genres, currently exploring Japanese authors",
       shelfLabel: "Bookshelf",
       readingNow: "reading now",
       finished: (when: string) => `finished ${when}`,
       coverAlt: (title: string) => `Cover of ${title}`,
       close: "Close",
       listening: "Listening",
-      listeningAside: "Eighteen years of tabla means I notice the percussion first, every time.",
+      listeningAside: "Eighteen years of tabla has led me to appreciate rhythms over melodies",
       globe: "Everywhere I have been so far, on one slowly turning ball.",
       globeLink: "Open the globe",
     },
@@ -64,8 +64,8 @@ export const copy = {
 
   work: {
     title: "Work",
-    description: "Every project, filterable by domain.",
-    heading: "Everything I have shipped or nearly shipped, by domain.",
+    description: "My personal projects, by domain.",
+    heading: "Everything I have shipped, by domain.",
     filterAll: "All",
     filterLabel: "Filter by domain",
     /* Project page */
@@ -94,8 +94,8 @@ export const copy = {
     title: "About",
     description: "How four degrees across biology, data science and information science turned into one job.",
     heading:
-      "Molecular biology, then data science, then applied information science and information systems. It reads like four things. It was one.",
-    intro: "Placeholder. The owner will write this as a path, not a list.",
+      "Molecular biology and data science into Applied Information Science and Health Tech.",
+    intro: "I was unsure at first but the chapters connected themselves.",
     work: "Work",
     education: "Where I studied",
   },

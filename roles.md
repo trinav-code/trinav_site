@@ -12,9 +12,8 @@ roles:
     start: 2026-02
     current: true
     note: >
-      Clinical AI infrastructure. Retrieval grounded in real interventions, note
-      generation, evaluation harnesses, and the agent workflows that tie them
-      together.
+      Clinical AI infrastructure, Retrieval grounded in real interventions, note
+      generation, evaluation harnesses, and the agentic workflows that link them.
 
   - title: Data Science Intern
     org: Magna Education
@@ -23,8 +22,7 @@ roles:
     note: >
       Cheating detection over quiz answers: embeddings and similarity
       clustering against a labeled benchmark of model-written and
-      human-written answers, plus the adopt-or-not evaluation of two
-      commercial detectors.
+      human-written answers, compared against two commercial detectors.
 
   - title: Data Science Intern
     org: Blackprint AI
@@ -32,7 +30,7 @@ roles:
     end: 2025-01
     note: >
       Async crawler over three listing sites and four Mexican cities,
-      reconciling 400K+ property listings into one schema, with incremental
+      wrangling 400K+ property listings into one standardized schema, with incremental
       S3 loads and Redshift cleaning downstream.
 
   - title: Research Assistant
@@ -40,21 +38,21 @@ roles:
     start: 2023-07
     end: 2025-12
     note: >
-      Neurophysics. Rebuilt calcium imaging pipelines from MATLAB into Python so
-      the lab could actually iterate on them.
+      Neurophysics. Rebuilt calcium imaging pipelines from MATLAB into Python for 
+      easier adoptability and iterability.
 
 education:
   # `groupNote` renders one quiet line under the LAST row of a group.
-  - degree: M.S. Applied Information Science
-    school: Technion – Israel Institute of Technology
-    start: 2026-08
-    end: 2028-05
-
   - degree: M.S. Information Systems, Concentration in Health Tech
     school: Cornell University
     start: 2026-08
     end: 2028-05
-    groupNote: Taken concurrently as the dual-degree program at the Jacobs Technion–Cornell Institute at Cornell Tech.
+
+  - degree: M.S. Applied Information Science
+    school: Technion – Israel Institute of Technology
+    start: 2026-08
+    end: 2028-05
+    groupNote: Taken concurrently as dual-degree program at the Jacobs Technion–Cornell Institute at Cornell Tech.
 
   - degree: B.A. Data Science
     school: University of California, Berkeley
@@ -65,5 +63,5 @@ education:
     school: University of California, Berkeley
     start: 2022
     end: 2026
-    groupNote: A double major, taken concurrently.
+    groupNote: Double major.
 ---
