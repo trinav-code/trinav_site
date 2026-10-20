@@ -105,4 +105,24 @@ const medium = defineCollection({
   }),
 });
 
-export const collections = { history, books, projects, writing, medium };
+const placeItem = z.object({
+  name: z.string(),
+  lat: z.number(),
+  lng: z.number(),
+  label: z.string().optional(),
+});
+
+const places = defineCollection({
+  loader: file('places.md', {
+    parser: (content) => {
+      const data = frontmatterYaml(content);
+      return {
+        lived: { items: data.lived ?? [] },
+        visited: { items: data.visited ?? [] },
+      };
+    },
+  }),
+  schema: z.object({ items: z.array(placeItem) }),
+});
+
+export const collections = { history, books, projects, writing, medium, places };

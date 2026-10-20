@@ -209,6 +209,15 @@ h1,h2,h3,h4{margin:0}
 .globe-line p{margin:0;font-size:15px;color:var(--ink-soft);max-width:42ch}
 .globe-line a{color:var(--ink);text-underline-offset:3px}
 
+/* ---------------- globe ---------------- */
+.globe-wrap{width:min(var(--size),100%);aspect-ratio:1;margin:0 auto}
+.globe-wrap canvas{width:100%;height:100%;display:block;touch-action:pan-y}
+.globe-full{margin:10px auto 28px}
+.place-list{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 22px;font-size:14px;color:var(--ink-soft)}
+.place-list li{display:flex;align-items:center;gap:8px}
+.place-dot{width:7px;height:7px;border-radius:50%;background:var(--d-sport);flex:none}
+.place-dot.lived{background:var(--d-health)}
+
 /* ---------------- prose (writeups, posts, about, colophon) ---------------- */
 .prose{padding-bottom:68px}
 .prose p,.prose li{font-size:16.5px;line-height:1.65;color:var(--ink);max-width:50ch}

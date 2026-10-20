@@ -1,10 +1,25 @@
 ---
+import { getEntry } from 'astro:content';
 import { copy } from '../../copy';
 import Base from '../layouts/Base.astro';
+import Globe from '../components/Globe.astro';
+
+const lived = (await getEntry('places', 'lived'))?.data.items ?? [];
+const visited = (await getEntry('places', 'visited'))?.data.items ?? [];
+const any = lived.length + visited.length > 0;
 ---
 <Base title={copy.globe.title} description={copy.globe.description}>
   <header class="page-head">
     <h1>{copy.globe.heading}</h1>
     <p>{copy.globe.intro}</p>
   </header>
+  <section class="block wide">
+    {any ? <Globe lived={lived} visited={visited} size={640} full /> : <p class="aside">{copy.globe.empty}</p>}
+    {any && (
+      <ul class="place-list">
+        {lived.map((p) => <li><span class="place-dot lived" aria-hidden="true"></span>{p.label ?? p.name}</li>)}
+        {visited.map((p) => <li><span class="place-dot" aria-hidden="true"></span>{p.label ?? p.name}</li>)}
+      </ul>
+    )}
+  </section>
 </Base>

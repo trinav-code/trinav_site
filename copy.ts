@@ -104,7 +104,8 @@ export const copy = {
     title: "Globe",
     description: "Everywhere so far, on one slowly turning ball.",
     heading: "Everywhere I have been so far.",
-    intro: "The globe itself arrives in a later pass. This page holds its place.",
+    intro: "Green is where I have lived, in order, with the moves drawn between them. Blue is everywhere else. Drag it.",
+    empty: "No places listed yet.",
   },
 
   colophon: {
