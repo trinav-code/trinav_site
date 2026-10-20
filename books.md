@@ -19,6 +19,10 @@
 # "read" shelf that is not listed here is appended at build.
 
 current:
+  - title: No Longer Human
+    author: Osamu Dazai
+    format: physical
+
   - title: Answered Prayers
     author: Truman Capote
     format: physical
@@ -27,6 +31,11 @@ current:
     author: Max Bennett
     format: physical
 recent:
+  - title: Trust
+    author: Hernan Diaz
+    finished: 2026-10
+    format: physical
+
   - title: Kokoro
     author: Natsume Sōseki
     finished: 2026-07

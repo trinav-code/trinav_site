@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Style tile · Trinav Chaudhuri</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..500&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../src/styles/global.css">
+<style>
+  /* Follows the class template (template-3): logo | project name band, then
+     Colour / Textures-Photos / Use examples on the left, Typography / Adjectives on the right. */
+  @page{size:1920px 1080px;margin:0}
+  html,body{width:1920px;height:1080px;overflow:hidden}
+  body{padding:0;font-size:16px}
+
+  .band{display:grid;grid-template-columns:380px 1fr;height:170px}
+  .logo{border:1px solid var(--rule);border-top:0;border-left:0;display:flex;align-items:center;justify-content:center}
+  .logo .mark{display:inline-block;width:14px;height:14px;background:var(--ink);margin-right:16px;vertical-align:-1px}
+  .logo .name{font-family:var(--serif);font-weight:300;font-size:36px;letter-spacing:-.018em}
+  .band-r{display:flex;flex-direction:column}
+  .band-r .top{height:86px;display:flex;align-items:center;padding:0 48px;border-bottom:1px solid var(--rule)}
+  .band-r .top h1{font-family:var(--serif);font-weight:300;font-size:34px;letter-spacing:-.014em}
+  .band-r .top span{margin-left:auto;font-size:14px;color:var(--ink-faint)}
+  .band-r .sub{padding:18px 48px 0;font-size:16px}
+  .band-r .sub em{font-family:var(--serif);font-style:italic;color:var(--ink-soft);margin-left:10px}
+
+  .grid{display:grid;grid-template-columns:1140px 1fr;column-gap:70px;padding:36px 48px 0 86px}
+  .col{display:flex;flex-direction:column;gap:40px}
+  h2.lbl{font-family:var(--sans);font-weight:500;font-size:14px;color:var(--ink-faint);margin:0 0 14px;letter-spacing:.01em}
+  .cap{font-size:13px;color:var(--ink-faint);line-height:1.45;margin-top:9px;font-variant-numeric:tabular-nums}
+  .cap b{font-weight:500;color:var(--ink-soft)}
+
+  /* colours */
+  .colors{display:flex;gap:28px}
+  .sw{width:104px;height:104px;border:1px solid var(--rule);border-radius:2px}
+  .hue{width:48px;height:48px;border-radius:2px}
+  .hues{display:flex;gap:16px;align-self:flex-end;margin-left:30px}
+  .hues .cap{margin-top:9px}
+
+  /* textures / photos */
+  .tex{display:flex;gap:40px}
+  .tex figure{margin:0}
+  .tex .box{width:150px;height:150px;border:1px solid var(--rule);border-radius:2px;display:flex;align-items:flex-end;justify-content:center;overflow:hidden;background:var(--paper)}
+  .tex img{height:134px;width:auto;display:block;margin-bottom:0}
+  .tex .grey img{filter:grayscale(1) contrast(1.05)}
+  .shelf-demo{display:flex;align-items:flex-end}
+  .shelf-demo .spine-slot{height:124px}
+  .shelf-demo .spine{width:26px;height:124px}
+  .ruled{background:repeating-linear-gradient(to bottom,var(--paper) 0 9px,var(--rule) 9px 10px)!important}
+
+  /* use examples */
+  .use{display:grid;grid-template-columns:1fr 1fr;column-gap:70px;row-gap:22px}
+  .nav{padding:0}
+  .entries li{padding:12px 0}
+  .projects a{padding:12px 12px}
+  .projects a.hover{padding-left:21px;background:color-mix(in srgb,var(--d-health) 8%,transparent)}
+  .filters{margin:0}
+  .filters a.plain{background:var(--ink-faint)}
+  .nav a.hover{color:var(--ink);border-bottom-color:var(--ink)}
+
+  /* typography */
+  .t{margin-bottom:20px}
+  .t-name{font-family:var(--serif);font-weight:300;font-size:40px;line-height:1.1;letter-spacing:-.018em}
+  .t-lede{font-family:var(--serif);font-weight:300;font-size:25px;line-height:1.4;letter-spacing:-.011em;max-width:30ch}
+  .t-h2{font-family:var(--serif);font-weight:400;font-size:19px;letter-spacing:-.005em}
+  .t-body{font-size:16px;line-height:1.6;max-width:44ch}
+  .t-body a{text-underline-offset:3px}
+  .t-aside{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-soft)}
+  .t-meta{font-size:14px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+
+  /* adjectives */
+  .adj{display:flex;flex-wrap:wrap;gap:14px 42px;font-family:var(--serif);font-weight:300;font-size:34px;letter-spacing:-.012em;color:var(--ink-soft);max-width:560px}
+  .adj span:nth-child(odd){color:var(--ink)}
+  .adj i{font-style:italic}
+</style>
+</head>
+<body>
+
+<div class="band">
+  <div class="logo"><span class="mark"></span><span class="name">Trinav Chaudhuri</span></div>
+  <div class="band-r">
+    <div class="top"><h1>trinav.dev</h1><span>INFO 6410 · Prototyping Workshop 2</span></div>
+    <div class="sub">Style Tile <em>version 1 · October 2026</em></div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="col">
+
+    <section>
+      <h2 class="lbl">Colour</h2>
+      <div class="colors">
+        <div><div class="sw" style="background:#FBFAF7"></div><div class="cap"><b>Paper</b> #FBFAF7<br>page</div></div>
+        <div><div class="sw" style="background:#000"></div><div class="cap"><b>Ink</b> #000000<br>text</div></div>
+        <div><div class="sw" style="background:#565049"></div><div class="cap"><b>Ink soft</b> #565049<br>secondary text, nav</div></div>
+        <div><div class="sw" style="background:#A29C93"></div><div class="cap"><b>Ink faint</b> #A29C93<br>dates, labels</div></div>
+        <div><div class="sw" style="background:#E4E0D7"></div><div class="cap"><b>Rule</b> #E4E0D7<br>1px dividers</div></div>
+        <div class="hues">
+          <div><div class="hue" style="background:#2F6B5E"></div><div class="cap"><b>Health</b><br>#2F6B5E</div></div>
+          <div><div class="hue" style="background:#7A3E52"></div><div class="cap"><b>Compliance</b><br>#7A3E52</div></div>
+          <div><div class="hue" style="background:#3B5486"></div><div class="cap"><b>Sport</b><br>#3B5486</div></div>
+          <div><div class="hue" style="background:#8A6420"></div><div class="cap"><b>Other</b><br>#8A6420</div></div>
+        </div>
+      </div>
+      <p class="cap" style="margin-top:16px">Colour never decorates. A hue only ever marks a <b>domain</b> of work, as a 9px square, a tag, a chip, or an 8% hover tint.</p>
+    </section>
+
+    <section>
+      <h2 class="lbl">Textures / Photos / Icons</h2>
+      <div class="tex">
+        <figure class="grey"><div class="box"><img src="1984-george-orwell-m.jpg" alt=""></div><div class="cap"><b>Cover, resting</b><br>greyscale, so the page reads as one surface</div></figure>
+        <figure><div class="box"><img src="1984-george-orwell-m.jpg" alt=""></div><div class="cap"><b>Cover, hover / open</b><br>colour only when asked for</div></figure>
+        <figure><div class="box"><div class="shelf-demo">
+          <div class="spine-slot"><span class="spine" style="--spine:#3A3632"><span class="spine-title">Kokoro</span></span></div>
+          <div class="spine-slot lean"><span class="spine" style="--spine:#5A6A5E"><span class="spine-title">Expected Goals</span></span></div>
+          <div class="spine-slot"><span class="spine" style="--spine:#8A5A4E"><span class="spine-title">Nineteen Eighty-Four</span></span></div>
+          <div class="spine-slot"><span class="spine" style="--spine:#4A5A7A;--w:20px"><span class="spine-title">A Brief History of Intelligence</span></span></div>
+        </div></div><div class="cap"><b>Shelf spines</b><br>colour sampled from each cover, desaturated 30%</div></figure>
+        <figure><div class="box ruled"></div><div class="cap"><b>Ruled paper</b><br>the only texture; also the missing-image fallback</div></figure>
+        <figure><div class="box" style="display:flex;align-items:center;justify-content:center;gap:18px"><span class="dom-mark health" style="margin:0;width:14px;height:14px"></span><span class="dom-mark compliance" style="margin:0;width:14px;height:14px"></span><span class="dom-mark sport" style="margin:0;width:14px;height:14px"></span><span class="dom-mark other" style="margin:0;width:14px;height:14px"></span></div><div class="cap"><b>Icons</b><br>one glyph: the domain square. No icon set.</div></figure>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="lbl">Use examples</h2>
+      <div class="use">
+        <div>
+          <nav class="nav"><ul><li><a href="#" aria-current="page">Work</a></li><li><a href="#">Writing</a></li><li><a href="#" class="hover">About</a></li></ul></nav>
+          <div class="cap"><b>Nav</b> · underline on hover, current page in ink</div>
+        </div>
+        <div>
+          <ul class="filters"><li><a href="#" class="plain">All</a></li><li><a href="#" class="health" aria-current="page">Health</a></li><li><a href="#" class="compliance">Compliance</a></li><li><a href="#" class="sport">Sport</a></li><li><a href="#" class="other">Other</a></li></ul>
+          <div class="cap"><b>Filter chips</b> · hue at 55% into paper; selected is full hue</div>
+        </div>
+        <div>
+          <div class="block-head"><h2>Work</h2><a href="#">All roles</a></div>
+          <ul class="entries"><li><div class="entry-title">Applied AI Engineer</div><div class="entry-where">Omi Health</div><span class="when">2025 — now</span></li></ul>
+          <div class="cap"><b>Section head + entry row</b> · rules, never cards</div>
+        </div>
+        <div>
+          <ul class="projects">
+            <li data-domain="health"><a href="#" class="hover"><h3><span class="dom-mark health"></span>Retracing Intelligence <span class="tag health">Health</span></h3><p>A clinical retrieval system that has to be right, not just fluent.</p></a></li>
+          </ul>
+          <div class="cap"><b>Project row, hovered</b> · slides 9px right, 8% domain tint</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="col">
+    <section>
+      <h2 class="lbl">Typography</h2>
+      <div class="t"><div class="t-name">Trinav Chaudhuri</div><div class="cap">Name · Newsreader Light 40px</div></div>
+      <div class="t"><div class="t-lede">I build clinical AI that has to work when there is a real patient on the other end of it.</div><div class="cap">Lede · Newsreader Light 25px</div></div>
+      <div class="t"><div class="t-h2">Where I studied</div><div class="cap">Section heading · Newsreader 19px</div></div>
+      <div class="t"><div class="t-body">Most of what I do is unglamorous. Pipelines, retrieval, evals, the plumbing that decides whether a model is <a href="#">useful or just fluent</a>. I care a lot about the difference.</div><div class="cap">Body · Instrument Sans 16px · inline link underlined in ink</div></div>
+      <div class="t"><div class="t-aside">Picked this up after a long gap and it still holds.</div><div class="cap">Aside · Newsreader Italic 15px · ink soft</div></div>
+      <div class="t"><div class="t-meta">2024 — 2026 &nbsp;&nbsp; Ithaca, NY</div><div class="cap">Meta · Instrument Sans 14px · ink faint · tabular figures</div></div>
+    </section>
+
+    <section>
+      <h2 class="lbl">Style adjectives</h2>
+      <div class="adj"><span>Quiet</span><span><i>Editorial</i></span><span>Considered</span><span>Warm</span><span><i>Unglamorous</i></span><span>Precise</span></div>
+    </section>
+  </div>
+</div>
+
+</body>
+</html>
